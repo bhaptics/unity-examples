@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Demo/Scenes/1. WidgetDemo.unity
+    guid: 65923a16372b0ef4b912c9fcfc6d04a1
+  - enabled: 1
+    path: Assets/Demo/Scenes/2. ShootingDemo.unity
+    guid: 8b8a9168458e2eb45af923b58e7e06e3
