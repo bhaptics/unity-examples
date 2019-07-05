@@ -1,1 +1,4 @@
-sceneSetups: []
+sceneSetups:
+- path: Assets/Scenes/2. ShootingDemo.unity
+  isLoaded: 1
+  isActive: 1
