@@ -1,17 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Bhaptics.Tact;
 using Bhaptics.Tact.Unity;
 
+
 public class BhapticsVisualFeedbackOnMotors : MonoBehaviour
 {
-    [SerializeField] private PositionType tactPositionType = PositionType.Vest;
+    [SerializeField] public PositionType tactPositionType = PositionType.Vest;
     [SerializeField] private GameObject visualMotorsObject;
     [SerializeField] private Gradient hapticColor;
 
 
 
-
-    private BhapticsManager bhapticsManager;
+    private List<HapticFeedback> changedFeedback = new List<HapticFeedback>();
     private GameObject[] visualMotors;
 
 
@@ -20,8 +21,6 @@ public class BhapticsVisualFeedbackOnMotors : MonoBehaviour
 
     void Start()
     {
-        bhapticsManager = FindObjectOfType<BhapticsManager>();
-
         if (visualMotorsObject == null)
         {
             Debug.LogError("BhapticsVisualFeedbackOnMotors.cs / visualMotorsObject is null");
@@ -34,19 +33,70 @@ public class BhapticsVisualFeedbackOnMotors : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        BhapticsManager.HapticPlayer.StatusReceived += HapticPlayer_StatusReceived;
+    }
+
+    void OnDisable()
+    {
+        BhapticsManager.HapticPlayer.StatusReceived -= HapticPlayer_StatusReceived;
+    }
+
     void Update()
     {
-        if (visualMotors == null || bhapticsManager == null)
-        {
-            return;
-        }
-        //ShowHapticFeedbackOnMotors(feedback);
+        ShowHapticFeedbackOnMotors();
     }
 
 
 
 
-    public void ShowHapticFeedbackOnMotors(HapticFeedback feedback)
+    private void ShowHapticFeedbackOnMotors()
+    {
+        if (changedFeedback == null)
+        {
+            return;
+        }
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!System.Threading.Monitor.TryEnter(changedFeedback))
+            {
+                return;
+            }
+            try
+            {
+                foreach (var feedback in changedFeedback)
+                {
+                    if (tactPositionType == feedback.Position)
+                    {
+                        ShowFeedbackEffect(feedback);
+                    }
+                }
+                changedFeedback.Clear();
+            }
+            finally
+            {
+                System.Threading.Monitor.Exit(changedFeedback);
+            }
+        }
+        else
+        {
+            HapticApi.status status;
+            HapticApi.TryGetResponseForPosition(tactPositionType, out status);
+
+            byte[] result = new byte[20];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = (byte)status.values[i];
+            }
+
+            HapticFeedback feedback = new HapticFeedback(tactPositionType, result);
+            ShowFeedbackEffect(feedback);
+        }
+    }
+
+    private void ShowFeedbackEffect(HapticFeedback feedback)
     {
         if (visualMotors == null)
         {
@@ -60,8 +110,32 @@ public class BhapticsVisualFeedbackOnMotors : MonoBehaviour
             var meshRenderer = motor.GetComponent<MeshRenderer>();
             if (meshRenderer != null)
             {
-                //meshRenderer.material.color = new Color(0.8f + power * 0.2f, 0.8f + power * 0.01f, 0.8f - power * 0.79f, 1f);
                 meshRenderer.material.color = hapticColor.Evaluate(power);
+            }
+        }
+    }
+
+    private void HapticPlayer_StatusReceived(PlayerResponse obj)
+    {
+        if (changedFeedback == null)
+        {
+            return;
+        }
+
+        lock (changedFeedback)
+        {
+            foreach (var status in obj.Status)
+            {
+                var pos = EnumParser.ToPositionType(status.Key);
+                var val = status.Value;
+
+                byte[] result = new byte[val.Length];
+                for (int i = 0; i < val.Length; i++)
+                {
+                    result[i] = (byte)val[i];
+                }
+                var feedback = new HapticFeedback(pos, result);
+                changedFeedback.Add(feedback);
             }
         }
     }

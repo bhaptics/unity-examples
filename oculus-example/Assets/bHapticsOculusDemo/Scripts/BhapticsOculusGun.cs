@@ -4,12 +4,7 @@ using UnityEngine;
 
 public class BhapticsOculusGun : MonoBehaviour
 {
-    public enum Hand
-    {
-        Left, Right
-    }
-
-    [SerializeField] private Hand hand = Hand.Left;
+    [SerializeField] private OVRInput.Button shootButton = OVRInput.Button.PrimaryIndexTrigger;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform shootPoint;
     [SerializeField] private TactSource shootTactSource;
@@ -24,14 +19,6 @@ public class BhapticsOculusGun : MonoBehaviour
 
 
 
-    void Start()
-    {
-        if (shootTactSource != null)
-        {
-            shootTactSource.IsReflectTactosy = hand == Hand.Right;
-        }
-    }
-
     void Update()
     {
         OculusInputForShoot();
@@ -43,19 +30,9 @@ public class BhapticsOculusGun : MonoBehaviour
 
     private void OculusInputForShoot()
     {
-        if (hand == Hand.Left)
+        if (OVRInput.GetDown(shootButton))
         {
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
-            {
-                Shoot();
-            }
-        }
-        else
-        {
-            if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger))
-            {
-                Shoot();
-            }
+            Shoot();
         }
     }
 
@@ -66,6 +43,10 @@ public class BhapticsOculusGun : MonoBehaviour
         if (rigid != null)
         {
             rigid.velocity = bullet.transform.forward * bulletSpeed;
+        }
+        if (shootTactSource != null)
+        {
+            shootTactSource.Play();
         }
     }
 }

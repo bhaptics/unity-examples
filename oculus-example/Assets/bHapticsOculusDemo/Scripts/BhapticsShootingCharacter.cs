@@ -61,12 +61,18 @@ public class BhapticsShootingCharacter : MonoBehaviour
     {
         if (target == null)
         {
-            Debug.LogError("Target is null");
             return;
         }
         var shootPoint = hand == 0 ? shootPointLeft : shootPointRight;
         var bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
-        bullet.transform.forward = (target.position - bullet.transform.position).normalized;
+        if (target != null)
+        {
+            bullet.transform.forward = (target.position - bullet.transform.position).normalized;
+        }
+        else
+        {
+            bullet.transform.forward = shootPoint.forward;
+        }
         var rigid = bullet.GetComponent<Rigidbody>();
         if (rigid != null)
         {
@@ -78,7 +84,6 @@ public class BhapticsShootingCharacter : MonoBehaviour
     {
         if (target == null)
         {
-            Debug.LogError("Target is null");
             return;
         }
         foreach (var look in lookingTransforms)
