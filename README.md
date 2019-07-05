@@ -1,25 +1,10 @@
-## bHaptics Haptic Library
-* Current version is 1.4.4
+## bHaptics Unity Example Projects 
 
-## Prerequisite
-* bHaptics Player has to be installed (Windows)
-   * The app can be found in
-   bHaptics webpage: [http://www.bhaptics.com](http://bhaptics.com/)
-
-
-## Documentation
-* https://github.com/bhaptics/tac-sharp/wiki/Documentation
-
-
-## 3rd party dependencies
-* nlohmann/json : https://github.com/nlohmann/json
-* easywsclient : https://github.com/dhbaird/easywsclient
-
-
-## Samples
+## Unity SDK
 * [unity-plugin github](https://github.com/bhaptics/tactosy-sharp/tree/master/samples/unity-plugin), [Unity asset store](https://assetstore.unity.com/packages/tools/integration/bhaptics-haptic-plugin-76647)
-* [unreal-plugin github](https://github.com/bhaptics/TactUnrealEngine4), [Unreal market place](https://www.unrealengine.com/marketplace/en-US/slug/bhaptics-haptic-manager)
 
+## Examples 
+* Oculuse Quest Example: [link](oculus-example)
 
 ## Contact
 * Official Website: http://www.bhaptics.com/
@@ -28,4 +13,4 @@
 
 Last update of README.md: Apr 10th, 2019.
 
-#### Copyright (c) 2016-2019 bHaptics Inc. All rights reserved.
+#### Copyright (c) 2019 bHaptics Inc. All rights reserved.
