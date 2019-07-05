@@ -1,6 +1,4 @@
-## bHaptics Unity Example Projects 
-
-## Unity SDK
+## bHaptics Unity SDK
 * [unity-plugin github](https://github.com/bhaptics/tactosy-sharp/tree/master/samples/unity-plugin), [Unity asset store](https://assetstore.unity.com/packages/tools/integration/bhaptics-haptic-plugin-76647)
 
 ## Examples 
