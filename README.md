@@ -2,7 +2,7 @@
 * [unity-plugin github](https://github.com/bhaptics/tactosy-sharp/tree/master/samples/unity-plugin), [Unity asset store](https://assetstore.unity.com/packages/tools/integration/bhaptics-haptic-plugin-76647)
 
 ## Examples 
-* Oculuse Quest Example: [link](oculus-example) [apk file link](release.bhaptics.com/oculus-quest/latest-oculus-example)
+* Oculuse Quest Example: [code link](oculus-example), [apk file link](release.bhaptics.com/oculus-quest/latest-oculus-example)
 * Mini Game [apk file link](http://release.bhaptics.com/oculus-quest/latest-solodemo-oculusquest) 
 
 ## Contact
