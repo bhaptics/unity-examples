@@ -100,6 +100,7 @@ namespace Bhaptics.Tact.Unity
                 return;
             }
             clip.VestRotationAngleX = angleX;
+            print("## " + angleX);
             clip.VestRotationOffsetY = offsetY * yOffsetMultiplier;
             
             clip.Play();
