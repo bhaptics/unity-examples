@@ -12,17 +12,21 @@ namespace Bhaptics.Tact.Unity
         private List<BhapticsDevice> devices = new List<BhapticsDevice>();
         private UI_Manager uiManager; 
 
-        [HideInInspector] public bool IsScanning;
+        [HideInInspector] public bool IsScanning; 
 
-#if UNITY_ANDROID 
         private void Awake()
         {
+            #if !UNITY_ANDROID
+                    return;
+            #endif
+
             if (Instance == null)
             {
                 uiManager = GetComponent<UI_Manager>();
                 Instance = this; 
             } 
-        } 
+        }
+
         private bool ScanTest()
         {
             var androidHapticPlayer = BhapticsManager.HapticPlayer as AndroidHapticPlayer;
@@ -226,6 +230,8 @@ namespace Bhaptics.Tact.Unity
         }
 
         #endregion
-#endif 
     }
+
+
+
 }

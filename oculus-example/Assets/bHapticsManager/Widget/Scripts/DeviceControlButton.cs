@@ -21,10 +21,10 @@ namespace Bhaptics.Tact.Unity
         [SerializeField] private Transform pairDeviceCount;
 
         private Button button;
-        private bool canPair; 
-        private bool isLeft;
+        private bool canPair;
 
-#if UNITY_ANDROID
+        private bool isLeft;
+        
         void Start()
         {
             isLeft = DeviceType.ToString().Contains("Left");
@@ -199,6 +199,5 @@ namespace Bhaptics.Tact.Unity
             }
             return false;
         }
-#endif
     }
 }

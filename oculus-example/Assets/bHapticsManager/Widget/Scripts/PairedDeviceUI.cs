@@ -15,9 +15,7 @@ namespace Bhaptics.Tact.Unity
         [Header("[Sprites]")] [SerializeField] private Sprite leftSide;
         [SerializeField] private Sprite rightSide;
 
-        private BhapticsDevice device;
-
-#if UNITY_ANDROID
+        private BhapticsDevice device;  
         void Start()
         {
             pingButton.onClick.AddListener(OnPing);
@@ -90,6 +88,5 @@ namespace Bhaptics.Tact.Unity
                 }
             }
         }
-#endif
     }
 }

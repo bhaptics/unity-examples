@@ -252,12 +252,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultSource: {fileID: 11433852}
-  BodySources:
-  - {fileID: 11433852}
   HeadSources:
   - {fileID: 11431224}
-  RightArmSources: []
+  BodySources:
+  - {fileID: 11433852}
   LeftArmSources: []
+  RightArmSources: []
   yOffsetMultiplier: 0.9
 --- !u!135 &13531550
 SphereCollider:

@@ -13,9 +13,7 @@ namespace Bhaptics.Tact.Unity
         [SerializeField] private Text deviceName;
         [SerializeField] private Button pairButton;
 
-        private BhapticsDevice device;
-
-#if UNITY_ANDROID
+        private BhapticsDevice device;  
         void Start()
         {
             pairButton.onClick.AddListener(OnPair);
@@ -39,6 +37,5 @@ namespace Bhaptics.Tact.Unity
                 DeviceManager.Instance.Pair(device.Address);
             }
         }
-#endif
     }
 }

@@ -40,10 +40,12 @@ namespace Bhaptics.Tact.Unity
         private IEnumerator ScanAnimationCor;
         private SettingObjectPool settingObjectPool;
 
-#if UNITY_ANDROID
-
         private void Awake()
         {
+            #if !UNITY_ANDROID
+                    return;
+            #endif
+
             if (!IsActivateWidget)
             {
                 return;
@@ -210,6 +212,5 @@ namespace Bhaptics.Tact.Unity
         }
 
         #endregion          
-#endif
     }
 }

@@ -15,8 +15,7 @@ namespace Bhaptics.Tact.Unity
         private AudioSource buttonClickAudio;
         private Animator animator;
         private bool widgetActive;
-
-#if UNITY_ANDROID
+        
         void Start()
         {
             buttonClickAudio = GetComponent<AudioSource>();
@@ -86,6 +85,5 @@ namespace Bhaptics.Tact.Unity
         {
             buttonClickAudio.Play();
         }
-#endif
-    }
+    } 
 }
