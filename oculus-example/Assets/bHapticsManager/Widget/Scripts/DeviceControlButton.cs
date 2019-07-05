@@ -50,6 +50,7 @@ namespace Bhaptics.Tact.Unity
             {
                 button.image.sprite = pairImage;
                 button.onClick.RemoveListener(OnPairDevice);
+                button.onClick.RemoveListener(OnPingDevice);
                 button.onClick.AddListener(OnPingDevice);
                 unPairButton.SetActive(true);
                 unPairButton.GetComponent<Button>().onClick.AddListener(OnUnpairDevice);
@@ -84,6 +85,7 @@ namespace Bhaptics.Tact.Unity
             {
                 button.image.sprite = defaultImage;
                 button.onClick.RemoveListener(OnPingDevice);
+                button.onClick.RemoveListener(OnPairDevice);
                 button.onClick.AddListener(OnPairDevice);
                 unPairButton.GetComponent<Button>().onClick.RemoveListener(OnUnpairDevice);
                 unPairButton.SetActive(false);

@@ -16,7 +16,7 @@ public class BhapticsShootingCharacter : MonoBehaviour
 
     private Animator animator;
     private int shootCount = 4;
-    private float shootDelay = 2f;
+    private float shootDelay = 3f;
     private float bulletSpeed = 2.5f;
 
 
