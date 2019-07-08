@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using wvr;
 
 
 public class BhapticsTeleport : MonoBehaviour
 {
-    [SerializeField] private OVRInput.Button teleportButton = OVRInput.Button.PrimaryIndexTrigger;
+    [SerializeField] private WVR_DeviceType deviceType = WVR_DeviceType.WVR_DeviceType_Controller_Left;
     [SerializeField] private Transform shootPoint;
     [SerializeField] private Transform vrCameraTransform;
     [SerializeField] private Material laserMaterial;
@@ -35,7 +36,7 @@ public class BhapticsTeleport : MonoBehaviour
 
     void Update()
     {
-        OculusInputForTeleport();
+        WaveVRInputForTeleport();
     }
 
 
@@ -54,13 +55,13 @@ public class BhapticsTeleport : MonoBehaviour
         laser.enabled = false;
     }
 
-    private void OculusInputForTeleport()
+    private void WaveVRInputForTeleport()
     {
-        if (OVRInput.Get(teleportButton))
+        if (WaveVR_Controller.Input(deviceType).GetPress(WVR_InputId.WVR_InputId_Alias1_Touchpad))
         {
             ShootRayForTeleport();
         }
-        else if (OVRInput.GetUp(teleportButton))
+        else if (WaveVR_Controller.Input(deviceType).GetPressUp(WVR_InputId.WVR_InputId_Alias1_Touchpad))
         {
             Teleport();
         }
