@@ -113,37 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &378467340
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1183641401521566, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 378467341}
-  m_Layer: 0
-  m_Name: L
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &378467341
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4280421981568976, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 378467340}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.03, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2146597305}
-  m_Father: {fileID: 1561450459}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &448013254
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,7 +190,7 @@ GameObject:
   - component: {fileID: 528252872}
   - component: {fileID: 528252871}
   m_Layer: 0
-  m_Name: ControllerLoader_R
+  m_Name: right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,8 +207,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 826427380}
-  m_RootOrder: 0
+  m_Father: {fileID: 913043406}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &528252871
 MonoBehaviour:
@@ -259,96 +228,26 @@ MonoBehaviour:
 --- !u!114 &528252872
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114375673987578496, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 528252869}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44840173158e1b54fa39bace0f5b2ff4, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d98a4e659663d14e8649dd9b59479db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WhichHand: 0
-  ControllerComponents: 1
+  Type: 2
+  InversePosition: 0
   TrackPosition: 1
   SimulationOption: 0
   FollowHead: 0
+  InverseRotation: 0
   TrackRotation: 1
-  overwriteIndicatorSettings: 1
-  showIndicator: 0
-  hideIndicatorByRoll: 1
-  basedOnEmitter: 1
-  showIndicatorAngle: 30
-  lineLength: 0.03
-  lineStartWidth: 0.0004
-  lineEndWidth: 0.0004
-  lineColor: {r: 1, g: 1, b: 1, a: 1}
-  textCharacterSize: 0.08
-  zhCharactarSize: 0.07
-  textFontSize: 100
-  textColor: {r: 1, g: 1, b: 1, a: 1}
-  useIndicatorSystemConfig: 1
-  buttonIndicationList: []
-  adaptiveLoading: 1
-  enableEmitter: 1
-  sendEvent: 1
-  enableButtonEffect: 1
-  useEffectSystemConfig: 1
-  buttonEffectColor:
-    serializedVersion: 2
-    rgba: 4293112576
-  ShowBeam: 1
-  useBeamSystemConfig: 1
-  updateEveryFrame: 0
-  StartWidth: 0.000625
-  EndWidth: 0.00125
-  StartOffset: 0.015
-  EndOffset: 0.8
-  StartColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  EndColor:
-    serializedVersion: 2
-    rgba: 1308622847
-  useDefaultMaterial: 1
-  customMat: {fileID: 0}
-  showPointer: 1
-  useCtrPointerSystemConfig: 1
-  blink: 0
-  UseDefaultTexture: 1
-  customTexture: {fileID: 0}
-  PointerOuterDiameterMin: 0.01
---- !u!1 &826427379
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1389511913075908, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 826427380}
-  m_Layer: 0
-  m_Name: R
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &826427380
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4763717217908310, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 826427379}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.03, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 528252870}
-  m_Father: {fileID: 1561450459}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  TrackTiming: 1
+  ApplyNeckOffset: 0
+  ElbowRaiseYaxis: 0
+  ElbowRaiseZaxis: 0
+  pointerTiltAngle: 15
 --- !u!1 &913043405
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +276,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1561450459}
+  - {fileID: 528252870}
+  - {fileID: 1455707823}
   - {fileID: 1464806371}
   - {fileID: 1281929851}
   m_Father: {fileID: 0}
@@ -411,7 +312,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 913043406}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1281929852
 MonoBehaviour:
@@ -481,6 +382,76 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1455707822
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1451837660064896, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1455707823}
+  - component: {fileID: 1455707825}
+  - component: {fileID: 1455707824}
+  m_Layer: 0
+  m_Name: left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1455707823
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4801391092600194, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1455707822}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 913043406}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1455707824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1455707822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab0091d1387cab40b873440efd833af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WhichHand: 1
+  defaultModel: {fileID: 0}
+  updateDynamically: 0
+  mergeToOneBone: 0
+--- !u!114 &1455707825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1455707822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d98a4e659663d14e8649dd9b59479db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 3
+  InversePosition: 0
+  TrackPosition: 1
+  SimulationOption: 0
+  FollowHead: 0
+  InverseRotation: 0
+  TrackRotation: 1
+  TrackTiming: 1
+  ApplyNeckOffset: 0
+  ElbowRaiseYaxis: 0
+  ElbowRaiseZaxis: 0
+  pointerTiltAngle: 15
 --- !u!1 &1464806370
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,7 +481,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 913043406}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1464806372
 MonoBehaviour:
@@ -601,9 +572,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 826427380}
-  - {fileID: 378467341}
+  m_Children: []
   m_Father: {fileID: 913043406}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -687,112 +656,3 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!1 &2146597304
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1998821988168548, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 2146597305}
-  - component: {fileID: 2146597307}
-  - component: {fileID: 2146597306}
-  m_Layer: 0
-  m_Name: ControllerLoader_L
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2146597305
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4608364691590090, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2146597304}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 378467341}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2146597306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2146597304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ab0091d1387cab40b873440efd833af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WhichHand: 1
-  defaultModel: {fileID: 0}
-  updateDynamically: 0
-  mergeToOneBone: 0
---- !u!114 &2146597307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114005652650249450, guid: 70ec3fa18c6db544a971b5d08a0b4c07,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2146597304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44840173158e1b54fa39bace0f5b2ff4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WhichHand: 1
-  ControllerComponents: 1
-  TrackPosition: 1
-  SimulationOption: 0
-  FollowHead: 0
-  TrackRotation: 1
-  overwriteIndicatorSettings: 1
-  showIndicator: 0
-  hideIndicatorByRoll: 1
-  basedOnEmitter: 1
-  showIndicatorAngle: 30
-  lineLength: 0.03
-  lineStartWidth: 0.0004
-  lineEndWidth: 0.0004
-  lineColor: {r: 1, g: 1, b: 1, a: 1}
-  textCharacterSize: 0.08
-  zhCharactarSize: 0.07
-  textFontSize: 100
-  textColor: {r: 1, g: 1, b: 1, a: 1}
-  useIndicatorSystemConfig: 1
-  buttonIndicationList: []
-  adaptiveLoading: 1
-  enableEmitter: 1
-  sendEvent: 1
-  enableButtonEffect: 1
-  useEffectSystemConfig: 1
-  buttonEffectColor:
-    serializedVersion: 2
-    rgba: 4293112576
-  ShowBeam: 1
-  useBeamSystemConfig: 1
-  updateEveryFrame: 0
-  StartWidth: 0.000625
-  EndWidth: 0.00125
-  StartOffset: 0.015
-  EndOffset: 0.8
-  StartColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  EndColor:
-    serializedVersion: 2
-    rgba: 1308622847
-  useDefaultMaterial: 1
-  customMat: {fileID: 0}
-  showPointer: 1
-  useCtrPointerSystemConfig: 1
-  blink: 0
-  UseDefaultTexture: 1
-  customTexture: {fileID: 0}
-  PointerOuterDiameterMin: 0.01

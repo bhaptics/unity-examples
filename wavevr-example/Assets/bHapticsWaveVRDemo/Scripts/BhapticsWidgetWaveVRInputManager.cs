@@ -31,17 +31,17 @@ public class BhapticsWidgetWaveVRInputManager : MonoBehaviour
 
     private void SetInputModule()
     {
-        WaveVR_ControllerLoader leftController = null, rightController = null;
-        var controllerLoaders = FindObjectsOfType<WaveVR_ControllerLoader>();
-        foreach (var controller in controllerLoaders)
+        WaveVR_ControllerPoseTracker leftController = null, rightController = null;
+        var poseTrackers = FindObjectsOfType<WaveVR_ControllerPoseTracker>();
+        foreach (var pt in poseTrackers)
         {
-            if (controller.WhichHand == WaveVR_ControllerLoader.ControllerHand.Dominant)
+            if (pt.Type == WaveVR_Controller.EDeviceType.Dominant)
             {
-                rightController = controller;
+                rightController = pt;
             }
-            else if (controller.WhichHand == WaveVR_ControllerLoader.ControllerHand.Non_Dominant)
+            else if (pt.Type == WaveVR_Controller.EDeviceType.NonDominant)
             {
-                leftController = controller;
+                leftController = pt;
             }
         }
 
