@@ -1,3 +1,6 @@
+## Unity Version
+* 2017.4.29f1
+
 ## bHaptics Unity SDK
 * [unity-plugin github](https://github.com/bhaptics/tactosy-sharp/tree/master/samples/unity-plugin), [Unity asset store](https://assetstore.unity.com/packages/tools/integration/bhaptics-haptic-plugin-76647)
 
