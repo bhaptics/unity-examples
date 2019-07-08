@@ -18,7 +18,10 @@ public class BhapticsWaveVRGun : MonoBehaviour
 
 
 
-
+    void Start()
+    {
+        Invoke("FindParent", 1f);
+    }
 
     void Update()
     {
@@ -28,6 +31,25 @@ public class BhapticsWaveVRGun : MonoBehaviour
 
 
 
+
+
+    private void FindParent()
+    {
+        var poseTrackers = FindObjectsOfType<WaveVR_ControllerPoseTracker>();
+        foreach (var tracker in poseTrackers)
+        {
+            if (deviceType == WVR_DeviceType.WVR_DeviceType_Controller_Right
+                && tracker.Type == WaveVR_Controller.EDeviceType.Dominant)
+            {
+                Attch(tracker.transform, transform);
+            }
+            else if (deviceType == WVR_DeviceType.WVR_DeviceType_Controller_Left
+                && tracker.Type == WaveVR_Controller.EDeviceType.NonDominant)
+            {
+                Attch(tracker.transform, transform);
+            }
+        }
+    }
 
     private void WaveVRInputForShoot()
     {
@@ -49,5 +71,13 @@ public class BhapticsWaveVRGun : MonoBehaviour
         {
             shootTactSource.Play();
         }
+    }
+
+    private void Attch(Transform parentTransform, Transform childTransform)
+    {
+        childTransform.parent = parentTransform.transform;
+        childTransform.localPosition = Vector3.zero;
+        childTransform.localRotation = Quaternion.identity;
+        childTransform.localScale = Vector3.one;
     }
 }

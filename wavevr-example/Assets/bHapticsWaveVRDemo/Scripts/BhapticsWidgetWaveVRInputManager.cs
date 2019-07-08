@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using wvr;
 
 public class BhapticsWidgetWaveVRInputManager : MonoBehaviour
 {
@@ -20,11 +20,8 @@ public class BhapticsWidgetWaveVRInputManager : MonoBehaviour
 
     void Start()
     {
-        SetInputModule();
+        Invoke("SetInputModule", 1f);
     }
-
-
-
 
 
 
@@ -33,6 +30,12 @@ public class BhapticsWidgetWaveVRInputManager : MonoBehaviour
     {
         WaveVR_ControllerPoseTracker leftController = null, rightController = null;
         var poseTrackers = FindObjectsOfType<WaveVR_ControllerPoseTracker>();
+        if (poseTrackers.Length == 0)
+        {
+            Invoke("SetInputModule", 1f);
+            return;
+        }
+
         foreach (var pt in poseTrackers)
         {
             if (pt.Type == WaveVR_Controller.EDeviceType.Dominant)
@@ -45,19 +48,21 @@ public class BhapticsWidgetWaveVRInputManager : MonoBehaviour
             }
         }
 
-        var leftInputObject = new GameObject("[Left Input]");
-        var rightInputObject = new GameObject("[Right Input]");
-
-        leftInputObject.AddComponent<BhapticsWidgetWaveVRInputModule>().deviceType = wvr.WVR_DeviceType.WVR_DeviceType_Controller_Left;
-        rightInputObject.AddComponent<BhapticsWidgetWaveVRInputModule>().deviceType = wvr.WVR_DeviceType.WVR_DeviceType_Controller_Right;
-
-        leftInputObject.transform.parent = leftController == null ? transform : leftController.transform;
-        rightInputObject.transform.parent = rightController == null ? transform : rightController.transform;
-
-        leftInputObject.transform.localPosition = leftPositionOffset;
-        leftInputObject.transform.localRotation = Quaternion.Euler(leftRotataionOffset);
-
-        rightInputObject.transform.localPosition = rightPositionOffset;
-        rightInputObject.transform.localRotation = Quaternion.Euler(rightRotataionOffset);
+        if (rightController != null)
+        {
+            var rightInputObject = new GameObject("[Right Input]");
+            rightInputObject.AddComponent<BhapticsWidgetWaveVRInputModule>().deviceType = wvr.WVR_DeviceType.WVR_DeviceType_Controller_Right;
+            rightInputObject.transform.parent = rightController.transform;
+            rightInputObject.transform.localPosition = rightPositionOffset;
+            rightInputObject.transform.localRotation = Quaternion.Euler(rightRotataionOffset);
+        }
+        if (leftController != null)
+        {
+            var leftInputObject = new GameObject("[Left Input]");
+            leftInputObject.AddComponent<BhapticsWidgetWaveVRInputModule>().deviceType = wvr.WVR_DeviceType.WVR_DeviceType_Controller_Left;
+            leftInputObject.transform.parent = leftController.transform;
+            leftInputObject.transform.localPosition = leftPositionOffset;
+            leftInputObject.transform.localRotation = Quaternion.Euler(leftRotataionOffset);
+        }
     }
 }
