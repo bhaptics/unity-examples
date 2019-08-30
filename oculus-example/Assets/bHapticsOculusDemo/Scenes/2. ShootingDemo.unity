@@ -2025,15 +2025,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -20
+      value: -3.004
       objectReference: {fileID: 0}
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 6
+      value: 2.097
       objectReference: {fileID: 0}
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.168
       objectReference: {fileID: 0}
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2057,15 +2057,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalScale.x
-      value: 0.50000024
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalScale.z
-      value: 0.50000024
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 465534, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -2074,6 +2074,10 @@ Prefab:
     - target: {fileID: 22481764, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490432, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
+      propertyPath: visualizeFeedback
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6b04d793cc1f3b34dbcc334ac23a3d96, type: 2}
@@ -2275,6 +2279,40 @@ Prefab:
     - target: {fileID: 4751758141281758, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0, type: 2}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114370562757126942, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0,
+        type: 2}
+      propertyPath: FeedbackFile.Id
+      value: 74bcef59208919642ab7d4c18eeca4ee
+      objectReference: {fileID: 0}
+    - target: {fileID: 114370562757126942, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0,
+        type: 2}
+      propertyPath: FeedbackFile.Key
+      value: Pistal_L
+      objectReference: {fileID: 0}
+    - target: {fileID: 114370562757126942, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0,
+        type: 2}
+      propertyPath: FeedbackFile.Value
+      value: '{"project":{"createdAt":1551955212117,"layout":{"layouts":{"ForearmL":[{"index":0,"x":0,"y":0},{"index":1,"x":0.5,"y":0},{"index":2,"x":1,"y":0},{"index":3,"x":0,"y":1},{"index":4,"x":0.5,"y":1},{"index":5,"x":1,"y":1}],"ForearmR":[{"index":0,"x":0,"y":0},{"index":1,"x":0.5,"y":0},{"index":2,"x":1,"y":0},{"index":3,"x":0,"y":1},{"index":4,"x":0.5,"y":1},{"index":5,"x":1,"y":1}]},"name":"Tactosy2","type":"Tactosy2"},"mediaFileDuration":1,"name":"Pistol_L","tracks":[{"effects":[{"modes":{"ForearmL":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"FADE_OUT","pointList":[{"index":1,"intensity":1},{"index":4,"intensity":1}],"startTime":0}]},"mode":"DOT_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}},"ForearmR":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"NONE","startTime":0,"pointList":[]}]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}}},"name":"Effect
+        1","offsetTime":200,"startTime":0}],"enable":true},{"effects":[{"modes":{"ForearmL":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"FADE_OUT","pointList":[{"index":5,"intensity":0.5},{"index":3,"intensity":0.5},{"index":0,"intensity":0.5},{"index":2,"intensity":0.5}],"startTime":0}]},"mode":"DOT_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]},{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}},"ForearmR":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"NONE","startTime":0,"pointList":[]}]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}}},"name":"Effect
+        1 copy","offsetTime":200,"startTime":0}],"enable":true}],"updatedAt":1551955212117,"id":"-L_MjIUKQMG2T_d1G9j_"},"durationMillis":0,"intervalMillis":20,"size":20}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995856241117766, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0,
+        type: 2}
+      propertyPath: FeedbackFile.Id
+      value: 74bcef59208919642ab7d4c18eeca4ee
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995856241117766, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0,
+        type: 2}
+      propertyPath: FeedbackFile.Key
+      value: Pistal_L
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995856241117766, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0,
+        type: 2}
+      propertyPath: FeedbackFile.Value
+      value: '{"project":{"createdAt":1551955212117,"layout":{"layouts":{"ForearmL":[{"index":0,"x":0,"y":0},{"index":1,"x":0.5,"y":0},{"index":2,"x":1,"y":0},{"index":3,"x":0,"y":1},{"index":4,"x":0.5,"y":1},{"index":5,"x":1,"y":1}],"ForearmR":[{"index":0,"x":0,"y":0},{"index":1,"x":0.5,"y":0},{"index":2,"x":1,"y":0},{"index":3,"x":0,"y":1},{"index":4,"x":0.5,"y":1},{"index":5,"x":1,"y":1}]},"name":"Tactosy2","type":"Tactosy2"},"mediaFileDuration":1,"name":"Pistol_L","tracks":[{"effects":[{"modes":{"ForearmL":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"FADE_OUT","pointList":[{"index":1,"intensity":1},{"index":4,"intensity":1}],"startTime":0}]},"mode":"DOT_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}},"ForearmR":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"NONE","startTime":0,"pointList":[]}]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}}},"name":"Effect
+        1","offsetTime":200,"startTime":0}],"enable":true},{"effects":[{"modes":{"ForearmL":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"FADE_OUT","pointList":[{"index":5,"intensity":0.5},{"index":3,"intensity":0.5},{"index":0,"intensity":0.5},{"index":2,"intensity":0.5}],"startTime":0}]},"mode":"DOT_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]},{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}},"ForearmR":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"NONE","startTime":0,"pointList":[]}]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}}},"name":"Effect
+        1 copy","offsetTime":200,"startTime":0}],"enable":true}],"updatedAt":1551955212117,"id":"-L_MjIUKQMG2T_d1G9j_"},"durationMillis":0,"intervalMillis":20,"size":20}'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b89e5ea57e1bf9b4aa7dd8adcbc272c0, type: 2}
