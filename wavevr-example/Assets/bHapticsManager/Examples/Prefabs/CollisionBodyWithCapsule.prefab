@@ -372,8 +372,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d629df746b3564a80daf515facc2df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 1
   PositionTag: 1
-  IsDestoryObject: 0
 --- !u!114 &11499792
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -385,8 +385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d629df746b3564a80daf515facc2df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 1
   PositionTag: 0
-  IsDestoryObject: 0
 --- !u!136 &13631594
 CapsuleCollider:
   m_ObjectHideFlags: 1

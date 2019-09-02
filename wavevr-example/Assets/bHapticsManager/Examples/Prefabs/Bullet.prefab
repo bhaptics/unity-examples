@@ -195,7 +195,7 @@ MonoBehaviour:
   - X: 0.5
     Y: 0.5
     Intensity: 100
-  DotPoints: 
+  DotPoints: 0000000000000000000000000000000000000000
   TimeMillis: 1000
   Intensity: 1
   Duration: 1
@@ -226,7 +226,7 @@ MonoBehaviour:
   - X: 0.5
     Y: 0.5
     Intensity: 100
-  DotPoints: 
+  DotPoints: 0000000000000000000000000000000000000000
   TimeMillis: 1000
   Intensity: 1
   Duration: 1
@@ -252,12 +252,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultSource: {fileID: 11433852}
-  BodySources:
-  - {fileID: 11433852}
   HeadSources:
   - {fileID: 11431224}
-  RightArmSources: []
+  BodySources:
+  - {fileID: 11433852}
   LeftArmSources: []
+  RightArmSources: []
   yOffsetMultiplier: 0.9
 --- !u!135 &13531550
 SphereCollider:

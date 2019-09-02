@@ -1713,7 +1713,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 6, y: 21}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 32, y: 24.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22485466
@@ -1828,8 +1828,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be2d301f70d94fc45bc83bb6e4f13b39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsActivateWidget: 1
   WidgetType: 0
+  isActivateWidget: 1
   darkWidgetPrefab: {fileID: 1746686147066734, guid: bc31e172f482a4448bb4728f0650c5f1,
     type: 2}
   lightWidgetPrefab: {fileID: 1353447315683640, guid: db8da7a4609b28e458a739f4ba73b5e6,
