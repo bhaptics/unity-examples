@@ -8,8 +8,6 @@ namespace Bhaptics.Tact.Unity
     public class BhapticsManager : MonoBehaviour
     {
         [SerializeField] private bool dontDestroyOnLoad;
-        private static BhapticsManager _manager;
-
 
         private VisualFeedback[] visualFeedback;
 
@@ -37,6 +35,8 @@ namespace Bhaptics.Tact.Unity
             return "";
         }
 
+        public static BhapticsManager Instance { get; private set; }
+
         public static IHapticPlayer HapticPlayer
         {
             get
@@ -55,7 +55,7 @@ namespace Bhaptics.Tact.Unity
                         }
                         else
                         {
-                            _hapticPlayer = new HapticPlayer2();
+                            _hapticPlayer = new HapticPlayer2(Application.identifier, Application.productName);
                         }
                     }
                 }
@@ -69,7 +69,7 @@ namespace Bhaptics.Tact.Unity
         {
             if (dontDestroyOnLoad)
             {
-                if (_manager == null)
+                if (Instance == null)
                 {
                     DontDestroyOnLoad(gameObject);
                 }
@@ -82,7 +82,7 @@ namespace Bhaptics.Tact.Unity
 
             var uninstalledMessage = "bHaptics Player is not installed. Plugin is now disabled. Please download here." +
                                      "\nhttp://bhaptics.com/app.html#download";
-            _manager = this;
+            Instance = this;
             if (!BhapticsUtils.IsPlayerInstalled())
             {
                 Debug.LogError(uninstalledMessage);
