@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class AssetBundleLoad : EditorWindow
 {
-    [MenuItem("Window/AssetBundle/Load an AssetBundle")]
+	[MenuItem("Window/AssetBundle/Load an AssetBundle")]
 	static void SelectFile()
 	{
 		string _file_path = EditorUtility.OpenFilePanel("Select folder of AssetBundle", "", "");

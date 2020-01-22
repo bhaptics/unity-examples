@@ -36,6 +36,11 @@ public class BhapticsWaveVRGun : MonoBehaviour
     private void FindParent()
     {
         var poseTrackers = FindObjectsOfType<WaveVR_ControllerPoseTracker>();
+        if (poseTrackers.Length <= 0)
+        {
+            Invoke("FindParent", 1f);
+            return;
+        }
         foreach (var tracker in poseTrackers)
         {
             if (deviceType == WVR_DeviceType.WVR_DeviceType_Controller_Right

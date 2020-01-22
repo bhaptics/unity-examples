@@ -939,7 +939,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4676289280212768}
   m_Layer: 0
-  m_Name: HeadFollowingPoint
+  m_Name: BodyFollowingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1003,7 +1003,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4068354727055318}
   - component: {fileID: 114441722048805284}
-  - component: {fileID: 114692425416743270}
+  - component: {fileID: 114261419244294112}
   m_Layer: 0
   m_Name: BhapticsOculusGun
   m_TagString: Untagged
@@ -1319,7 +1319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4801465549553280}
   - component: {fileID: 114339563978030760}
-  - component: {fileID: 114968208241693258}
+  - component: {fileID: 114429409562560620}
   m_Layer: 0
   m_Name: BhapticsOculusGun
   m_TagString: Untagged
@@ -5619,6 +5619,21 @@ MonoBehaviour:
   usePerEyeCameras: 0
   useFixedUpdateForTracking: 0
   disableEyeAnchorCameras: 0
+--- !u!114 &114261419244294112
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1761879029463966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd8617c5fa2ad34b98d1609e532c7f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportButton: 4
+  shootPoint: {fileID: 4807861954181980}
+  vrCameraTransform: {fileID: 4714022361910768}
+  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114293296642273490
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5720,6 +5735,21 @@ MonoBehaviour:
       1","offsetTime":200,"startTime":0}],"enable":true},{"effects":[{"modes":{"ForearmL":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"FADE_OUT","pointList":[{"index":5,"intensity":0.5},{"index":3,"intensity":0.5},{"index":0,"intensity":0.5},{"index":2,"intensity":0.5}],"startTime":0}]},"mode":"DOT_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]},{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}},"ForearmR":{"dotMode":{"dotConnected":false,"feedback":[{"endTime":200,"playbackType":"NONE","startTime":0,"pointList":[]}]},"mode":"PATH_MODE","pathMode":{"feedback":[{"movingPattern":"CONST_SPEED","playbackType":"NONE","visible":true,"pointList":[]}]}}},"name":"Effect
       1 copy","offsetTime":200,"startTime":0}],"enable":true}],"updatedAt":1551955212117,"id":"-L_MjIUKQMG2T_d1G9j_"},"durationMillis":0,"intervalMillis":20,"size":20}'
     Type: Tactosy2
+--- !u!114 &114429409562560620
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1936510526410582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd8617c5fa2ad34b98d1609e532c7f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportButton: 1
+  shootPoint: {fileID: 4633560412213364}
+  vrCameraTransform: {fileID: 4714022361910768}
+  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114441722048805284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5803,21 +5833,6 @@ MonoBehaviour:
   resetTrackerOnLoad: 0
   AllowRecenter: 1
   _reorientHMDOnControllerRecenter: 1
---- !u!114 &114692425416743270
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1761879029463966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99cb8c4c822e3a44789a92573c480e53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportButton: 4
-  shootPoint: {fileID: 4807861954181980}
-  vrCameraTransform: {fileID: 4714022361910768}
-  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114753889957454812
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5929,7 +5944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e253e7d58c8c2354f960120c64841320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vrCamera: {fileID: 4676289280212768}
+  camera: {fileID: 4676289280212768}
   distance: 0.3
 --- !u!114 &114952014184214018
 MonoBehaviour:
@@ -5973,21 +5988,6 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
---- !u!114 &114968208241693258
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1936510526410582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99cb8c4c822e3a44789a92573c480e53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportButton: 1
-  shootPoint: {fileID: 4633560412213364}
-  vrCameraTransform: {fileID: 4714022361910768}
-  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114995856241117766
 MonoBehaviour:
   m_ObjectHideFlags: 1

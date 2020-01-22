@@ -29,6 +29,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1136247405016468
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4042489728176934}
+  - component: {fileID: 23065110636902234}
+  - component: {fileID: 33152346360887164}
+  - component: {fileID: 114401496344315324}
+  m_Layer: 0
+  m_Name: ReticleRing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1343536371555012
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,6 +132,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4042489728176934
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1136247405016468}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4266303911079740}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4044995434021916
 Transform:
   m_ObjectHideFlags: 1
@@ -140,6 +171,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4044995434021916}
+  - {fileID: 4042489728176934}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -179,6 +211,40 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!23 &23065110636902234
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1136247405016468}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!23 &23206455800415342
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -213,6 +279,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!33 &33152346360887164
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1136247405016468}
+  m_Mesh: {fileID: 0}
 --- !u!114 &114149473327553398
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -258,6 +331,23 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114401496344315324
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1136247405016468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d2fd90b24a5d945b8cb42093a126e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RingWidth: 0.01
+  InnerCircleRadius: 0.02
+  RingDistance: 2
+  Color: {r: 1, g: 1, b: 1, a: 1}
+  ProgressColor: {r: 0, g: 0.9607843, b: 1, a: 1}
+  RingPercent: 0
 --- !u!114 &114415743035949412
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -377,17 +467,18 @@ MonoBehaviour:
   AlwaysShowController: 0
   CustomInputModule: 0
   Gaze:
-    progressRate: 1
-    RateTextZPosition: 0.5
-    progressCounter: 1
-    CounterTextZPosition: 0.5
+    UseWaveVRReticle: 0
+    TimerControl: 1
     TimeToGaze: 2
+    ProgressRate: 0
+    RateTextZPosition: 0.5
+    ProgressCounter: 0
+    CounterTextZPosition: 0.5
     InputEvent: 2
+    ButtonControl: 1
+    ButtonControlDevices: 0200000003000000
+    ButtonControlKeys: 1000000011000000
     Head: {fileID: 1079814101119668}
-    BtnControl: 0
-    GazeDevice: 0
-    ButtonToTrigger: 17
-    WithTimeGaze: 0
   Controller:
     DominantEventEnabled: 1
     DominantController: {fileID: 0}
@@ -399,11 +490,9 @@ MonoBehaviour:
     NonDominantRaycastMask:
       serializedVersion: 2
       m_Bits: 4294967295
-    ButtonToTrigger: 16
-    OtherButtonToTrigger: 
+    ButtonToTrigger: 1000000011000000
     RaycastMode: 2
     RaycastStartPoint: 0
-    Head: {fileID: 1079814101119668}
     CanvasTag: EventCanvas
   FixedBeamLength: 9.5
 --- !u!222 &222051508064679908

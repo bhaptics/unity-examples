@@ -60,6 +60,7 @@ MonoBehaviour:
   overwriteIndicatorSettings: 1
   showIndicator: 0
   hideIndicatorByRoll: 1
+  basedOnEmitter: 1
   showIndicatorAngle: 30
   lineLength: 0.03
   lineStartWidth: 0.0004

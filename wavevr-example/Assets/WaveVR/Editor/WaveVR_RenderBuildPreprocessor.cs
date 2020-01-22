@@ -18,57 +18,61 @@ using UnityEngine;
 
 public class WaveVR_RenderBuildPreprocessor :
 #if UNITY_2018_1_OR_NEWER
-        IPreprocessBuildWithReport
+		IPreprocessBuildWithReport
 #else
-        IPreprocessBuild
+		IPreprocessBuild
 #endif
 {
-    public int callbackOrder { get { return 0; } }
+	public int callbackOrder { get { return 0; } }
 
-    void SinglePassPreProcess()
-    {
-        if (target != BuildTarget.Android)
-        {
-            Debug.LogError("Target platform is not Android");
-            return;
-        }
+	void SinglePassPreProcess()
+	{
+		if (target != BuildTarget.Android)
+		{
+			Debug.LogError("Target platform is not Android");
+			return;
+		}
 
-        var vrSupported = WaveVR_Settings.GetVirtualRealitySupported(BuildTargetGroup.Android);
-        var list = WaveVR_Settings.GetVirtualRealitySDKs(BuildTargetGroup.Android);
-        var hasSplit = ArrayUtility.Contains<string>(list, "split");
-        var stereoRenderingPath = PlayerSettings.stereoRenderingPath;
+		var vrSupported = WaveVR_Settings.GetVirtualRealitySupported(BuildTargetGroup.Android);
+		var list = WaveVR_Settings.GetVirtualRealitySDKs(BuildTargetGroup.Android);
+		var hasVRDevice = ArrayUtility.Contains<string>(list, WaveVR_Settings.WVRSinglePassDeviceName);
+#if UNITY_2018_2_OR_NEWER
+		// Please remove old name
+		if (ArrayUtility.Contains<string>(list, "split"))
+			Debug.LogError("Contains old VR device name in XR settings.\nPlease remove it.");
+#endif
+		var stereoRenderingPath = PlayerSettings.stereoRenderingPath;
+		List<string> allDefines = WaveVR_Settings.GetDefineSymbols(BuildTargetGroup.Android);
+		var hasDefine = allDefines.Contains(WaveVR_Settings.WVRSPDEF);
 
-        List<string> allDefines = WaveVR_Settings.GetDefineSymbols(BuildTargetGroup.Android);
-        var hasDefine = allDefines.Contains(WaveVR_Settings.WVRSPDEF);
+		// if single pass enabled in PlayerSettings, set the define.  Here is a final check.
+		Debug.Log("SinglePassPreProcess: vrSupported=" + vrSupported + ", stereoRenderingPath=" + stereoRenderingPath +
+			", hasVRDevice=" + hasVRDevice + ", hasDefine=" + hasDefine);
+		var set = vrSupported && hasVRDevice && stereoRenderingPath == StereoRenderingPath.SinglePass;
 
-        // if single pass enabled in PlayerSettings, set the define.  Here is a final check.
-        Debug.Log("SinglePassPreProcess: vrSupported=" + vrSupported + ", stereoRenderingPath=" + stereoRenderingPath +
-            ", hasSplit=" + hasSplit + ", hasDefine=" + hasDefine);
-        var set = vrSupported && hasSplit && stereoRenderingPath == StereoRenderingPath.SinglePass;
+		WaveVR_Settings.SetSinglePassDefine(group, set, allDefines);
+	}
 
-        WaveVR_Settings.SetSinglePassDefine(group, set, allDefines);
-    }
+	public BuildTargetGroup group;
+	public BuildTarget target;
 
-    public BuildTargetGroup group;
-    public BuildTarget target;
+	public void OnPreprocessBuild(BuildTarget target, string path)
+	{
+		this.target = target;
+		if (target != BuildTarget.Android)
+			return;
+		this.group = BuildTargetGroup.Android;
 
-    public void OnPreprocessBuild(BuildTarget target, string path)
-    {
-        this.target = target;
-        if (target != BuildTarget.Android)
-            return;
-        this.group = BuildTargetGroup.Android;
-
-        SinglePassPreProcess();
-    }
+		SinglePassPreProcess();
+	}
 
 #if UNITY_2018_1_OR_NEWER
-    public void OnPreprocessBuild(BuildReport report)
-    {
-        target = report.summary.platform;
-        group = report.summary.platformGroup;
+	public void OnPreprocessBuild(BuildReport report)
+	{
+		target = report.summary.platform;
+		group = report.summary.platformGroup;
 
-        SinglePassPreProcess();
-    }
+		SinglePassPreProcess();
+	}
 #endif
 }

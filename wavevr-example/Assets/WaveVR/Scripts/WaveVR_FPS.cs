@@ -1,4 +1,4 @@
-﻿// "WaveVR SDK 
+// "WaveVR SDK 
 // © 2017 HTC Corporation. All Rights Reserved.
 //
 // Unless otherwise required by copyright law and practice,
@@ -15,29 +15,59 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Text))]
 public class WaveVR_FPS : MonoBehaviour
 {
-    private Text textField;
-    private float fps = 60;
+	private Text textField;
+	private float fps = 75;
+#if !UNITY_EDITOR
+	private float targetfps = 75;
+#endif
+	private float accTime = 0;
 
-    void Awake()
-    {
-        textField = GetComponent<Text>();
-    }
+	void Awake()
+	{
+		textField = GetComponent<Text>();
+		accTime = 0;
+	}
 
-    void LateUpdate()
-    {
-        // Avoid crash when timeScale is 0.
-        if (Time.deltaTime == 0)
-        {
-            textField.text = "0fps";
-            return;
-        }
+	void LateUpdate()
+	{
+		float unscaledDeltaTime = Time.unscaledDeltaTime;
+		accTime += unscaledDeltaTime;
 
-        string text = "";
+		// Avoid crash when timeScale is 0.
+		if (unscaledDeltaTime == 0)
+		{
+			textField.text = "0fps";
+			return;
+		}
 
-        float interp = Time.deltaTime / (0.5f + Time.deltaTime);
-        float currentFPS = 1.0f / Time.deltaTime;
-        fps = Mathf.Lerp(fps, currentFPS, interp);
-        text += Mathf.RoundToInt(fps) + "fps";
-        textField.text = text;
-    }
+		string text = "";
+
+		float interp = unscaledDeltaTime / (0.5f + unscaledDeltaTime);
+		float currentFPS = 1.0f / unscaledDeltaTime;
+		fps = Mathf.Lerp(fps, currentFPS, interp);
+#if !UNITY_EDITOR
+		var showFps = (fps > targetfps) ? targetfps : fps;
+#else
+		var showFps = fps;
+#endif
+		// Avoid update Canvas too frequently.
+		if (accTime < 0.20f)
+			return;
+		accTime = 0;
+
+		text += Mathf.RoundToInt(showFps) + "fps";
+		textField.text = text;
+	}
+
+	void Start()
+	{
+#if !UNITY_EDITOR
+		var localfps = Application.targetFrameRate;
+
+		if (localfps > 0)
+		{
+			targetfps = localfps;
+		}
+#endif
+	}
 }
