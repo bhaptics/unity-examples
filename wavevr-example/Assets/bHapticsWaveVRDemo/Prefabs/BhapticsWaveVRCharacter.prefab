@@ -640,7 +640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4684589179836176}
   m_Layer: 0
-  m_Name: HeadFollowingPoint
+  m_Name: BodyFollowingPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5466,11 +5466,12 @@ MonoBehaviour:
   useDefaultMaterial: 1
   customMat: {fileID: 0}
   showPointer: 1
-  useCtrPointerSystemConfig: 1
-  blink: 0
+  usePointerSystemConfig: 1
+  Blink: 0
   UseDefaultTexture: 1
   customTexture: {fileID: 0}
   PointerOuterDiameterMin: 0.01
+  PointerColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114054988420924464
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5498,7 +5499,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99cb8c4c822e3a44789a92573c480e53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deviceType: 2
   shootPoint: {fileID: 4586277427175956}
   vrCameraTransform: {fileID: 4607653554376848}
   laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
@@ -5544,7 +5544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e253e7d58c8c2354f960120c64841320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vrCamera: {fileID: 4684589179836176}
+  camera: {fileID: 4684589179836176}
   distance: 0.3
 --- !u!114 &114247545493780670
 MonoBehaviour:
@@ -5660,11 +5660,12 @@ MonoBehaviour:
   useDefaultMaterial: 1
   customMat: {fileID: 0}
   showPointer: 1
-  useCtrPointerSystemConfig: 1
-  blink: 0
+  usePointerSystemConfig: 1
+  Blink: 0
   UseDefaultTexture: 1
   customTexture: {fileID: 0}
   PointerOuterDiameterMin: 0.01
+  PointerColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114416037899118810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5735,7 +5736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99cb8c4c822e3a44789a92573c480e53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deviceType: 3
   shootPoint: {fileID: 4763899769116966}
   vrCameraTransform: {fileID: 4607653554376848}
   laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
@@ -5818,7 +5818,10 @@ MonoBehaviour:
   distortion: {fileID: 0}
   loadingCanvas: {fileID: 0}
   ear: {fileID: 0}
+  useLoadingCanvas: 0
+  loadingBlockerColor: {r: 0, g: 0, b: 0, a: 1}
   _origin: 1
+  pixelDensity: 1
   needTimeControl: 0
 --- !u!114 &114790370830554330
 MonoBehaviour:

@@ -1,4 +1,4 @@
-﻿// "WaveVR SDK 
+// "WaveVR SDK 
 // © 2017 HTC Corporation. All Rights Reserved.
 //
 // Unless otherwise required by copyright law and practice,
@@ -8,219 +8,115 @@
 // conditions signed by you and all SDK and API requirements,
 // specifications, and documentation provided by HTC to You."
 
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using wvr;
-using WaveVR_Log;
-using System;
+using WVR_Log;
 
 public class WaveVR_PermissionManager {
-    private static string LOG_TAG = "WVR_PermissionManager";
-    private const string PERMISSION_MANAGER_CLASSNAME = "com.htc.vr.permission.client.PermissionManager";
-    private AndroidJavaObject permissionsManager = null;
+	private static string LOG_TAG = "WaveVR_PermissionManager";
 
-    private static WaveVR_PermissionManager mInstance = null;
+	public class RequestResult
+	{
+		private string mPermission;
+		private bool mGranted;
 
-    public static WaveVR_PermissionManager instance {
-        get
-        {
-            if (mInstance == null)
-            {
-                mInstance = new WaveVR_PermissionManager();
-            }
+		public RequestResult(string name, bool granted)
+		{
+			mPermission = name;
+			mGranted = granted;
+		}
+		public string PermissionName
+		{
+			get { return mPermission; }
+		}
 
-            return mInstance;
-        }
-    }
+		public bool Granted
+		{
+			get { return mGranted; }
+		}
+	}
 
-    private AndroidJavaObject javaArrayFromCS(string[] values)
-    {
-        AndroidJavaClass arrayClass = new AndroidJavaClass("java.lang.reflect.Array");
-        AndroidJavaObject arrayObject = arrayClass.CallStatic<AndroidJavaObject>("newInstance", new AndroidJavaClass("java.lang.String"), values.Length);
-        for (int i = 0; i < values.Length; ++i)
-        {
-            arrayClass.CallStatic("set", arrayObject, i, new AndroidJavaObject("java.lang.String", values[i]));
-        }
+	private static WaveVR_PermissionManager mInstance = null;
+	public delegate void requestCompleteCallback(List<RequestResult> results);
+	public delegate void requestUsbCompleteCallback(bool result);
+	private static requestCompleteCallback mCallback = null;
+	private static requestUsbCompleteCallback mUsbCallback = null;
 
-        return arrayObject;
-    }
+	public static WaveVR_PermissionManager instance {
+		get
+		{
+			if (mInstance == null)
+			{
+				mInstance = new WaveVR_PermissionManager();
+			}
 
-    private void initializeJavaObject()
-    {
-        Log.d(LOG_TAG, "initializeJavaObject");
-        AndroidJavaClass ajc = new AndroidJavaClass(PERMISSION_MANAGER_CLASSNAME);
+			return mInstance;
+		}
+	}
 
-        if (ajc == null)
-        {
-            Log.e(LOG_TAG, "AndroidJavaClass is null");
-            return;
-        }
-        // Get the PermissionManager object
-        permissionsManager = ajc.CallStatic<AndroidJavaObject>("getInstance");
-        if (permissionsManager != null)
-        {
-            Log.d(LOG_TAG, "permissionsManager get object success");
-        } else
-        {
-            Log.e(LOG_TAG, "permissionsManager get object failed");
-        }
-    }
+	public static void requestDoneCallback(List<WVR_RequestResult> results)
+	{
+		Log.d(LOG_TAG, "requestDoneCallback, result count = " + results.Count);
+		List<RequestResult> listResult = new List<RequestResult>();
 
-    public bool isInitialized()
-    {
-        if (permissionsManager == null)
-        {
-            initializeJavaObject();
-        }
+		for (int i = 0; i < results.Count; i++)
+		{
+			listResult.Add(new RequestResult(results[i].mPermission, results[i].mGranted));
+		}
 
-        if (permissionsManager == null)
-        {
-            Log.e(LOG_TAG, "isInitialized failed because fail to get permissionsManager object");
-            return false;
-        }
+		mCallback(listResult);
+	}
 
-        return permissionsManager.Call<bool>("isInitialized");
-    }
+	public static void requestUsbDoneCallback(bool result)
+	{
+		Log.d(LOG_TAG, "requestUsbDoneCallback, result=" + result);
+		mUsbCallback(result);
+	}
 
-    public void requestPermissions(string[] permissions, requestCompleteCallback cb)
-    {
-        Log.d(LOG_TAG, "requestPermission");
+	public bool isInitialized()
+	{
+		bool ret = Interop.WVR_IsPermissionInitialed();
+		Log.d(LOG_TAG, "isInitialized: " + ret);
+		return ret;
+	}
 
-        if (!isInitialized())
-        {
-            Log.e(LOG_TAG, "requestPermissions failed because permissionsManager doesn't initialize");
-            return;
-        }
+	public void requestPermissions(string[] permissions, requestCompleteCallback cb)
+	{
+		Log.d(LOG_TAG, "requestPermission");
 
-        if (!permissionsManager.Call<bool>("isShow2D"))
-        {
-            mCallback = cb;
-            permissionsManager.Call("requestPermissions", javaArrayFromCS(permissions), new RequestCompleteHandler());
-        }
-        else
-        {
-            mCallback = cb;
-            using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            {
-                using (AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity"))
-                {
-                    jo.Call("setRequestPermissionCallback", new RequestCompleteHandler());
-                }
-            }
-            permissionsManager.Call("requestPermissions", javaArrayFromCS(permissions), new RequestCompleteHandler());
-        }
-    }
+		mCallback = cb;
 
-    public bool isPermissionGranted(string permission)
-    {
-        if (!isInitialized())
-        {
-            Log.e(LOG_TAG, "isPermissionGranted failed because permissionsManager doesn't initialize");
-            return false;
-        }
+		Interop.WVR_RequestPermissions(permissions, requestDoneCallback);
+	}
 
-        return permissionsManager.Call<bool>("isPermissionGranted", permission);
-    }
+	public void requestUsbPermission(requestUsbCompleteCallback cb)
+	{
+		Log.d(LOG_TAG, "requestUsbPermission");
+		mUsbCallback = cb;
+		Interop.WVR_RequestUsbPermission(requestUsbDoneCallback);
+	}
 
-    public bool shouldGrantPermission(string permission)
-    {
-        if (!isInitialized())
-        {
-            Log.e(LOG_TAG, "shouldGrantPermission failed because permissionsManager doesn't initialize");
-            return false;
-        }
+	public bool isPermissionGranted(string permission)
+	{
+		bool ret = Interop.WVR_IsPermissionGranted(permission);
+		Log.d(LOG_TAG, "isPermissionGranted: permission = " + permission + " : " + ret);
 
-        return permissionsManager.Call<bool>("shouldGrantPermission", permission);
-    }
+		return ret;
+	}
 
-    public bool showDialogOnScene()
-    {
-        if (!isInitialized())
-        {
-            Log.e(LOG_TAG, "showDialogOnScene failed because permissionsManager doesn't initialize");
-            return false;
-        }
+	public bool shouldGrantPermission(string permission)
+	{
+		bool ret = Interop.WVR_ShouldGrantPermission(permission);
+		Log.d(LOG_TAG, "shouldGrantPermission: permission = " + permission + " : " + ret);
 
-        return permissionsManager.Call<bool>("showDialogOnVRScene");
-    }
+		return ret;
+	}
 
-    public class RequestResult
-    {
-        private string mPermission;
-        private bool mGranted;
+	public bool showDialogOnScene()
+	{
+		bool ret = Interop.WVR_ShowDialogOnScene();
+		Log.d(LOG_TAG, "showDialogOnScene: " + ret);
 
-        public RequestResult(string name, bool granted)
-        {
-            mPermission = name;
-            mGranted = granted;
-        }
-        public string PermissionName
-        {
-            get { return mPermission; }
-        }
-
-        public bool Granted
-        {
-            get { return mGranted; }
-        }
-    }
-
-    public delegate void requestCompleteCallback(List<RequestResult> results);
-
-    private static requestCompleteCallback mCallback = null;
-
-    class RequestCompleteHandler : AndroidJavaProxy
-    {
-        internal RequestCompleteHandler() : base(new AndroidJavaClass("com.htc.vr.permission.client.PermissionCallback")) {
-        }
-
-        public void onRequestCompletedwithObject(AndroidJavaObject resultObject)
-        {
-            Log.i(LOG_TAG, "unity callback with result object");
-            if (mCallback == null)
-            {
-                Log.w(LOG_TAG, "unity callback but user callback is null ");
-            }
-
-            List<RequestResult> permissionResults = new List<RequestResult>();
-            bool[] resultArray = null;
-            AndroidJavaObject boolbuffer = resultObject.Get<AndroidJavaObject>("result");
-            if ((boolbuffer) != null && (boolbuffer.GetRawObject() != IntPtr.Zero))
-            {
-                try
-                {
-#if UNITY_2018
-                    resultArray = AndroidJNI.FromBooleanArray(boolbuffer.GetRawObject());
-#else
-                    resultArray = AndroidJNIHelper.ConvertFromJNIArray<bool[]>(boolbuffer.GetRawObject());
-#endif
-                    Log.i(LOG_TAG, "ConvertFromJNIArray to bool array : " + resultArray.Length);
-                }
-                catch (Exception e)
-                {
-                    Log.e(LOG_TAG, "ConvertFromJNIArray failed: " + e.ToString());
-                }
-            }
-
-            string[] permissionArray = null;
-
-            AndroidJavaObject stringbuffer = resultObject.Get<AndroidJavaObject>("requestPermissions");
-            if ((stringbuffer) != null && (stringbuffer.GetRawObject() != IntPtr.Zero))
-            {
-                permissionArray = AndroidJNIHelper.ConvertFromJNIArray<string[]>(stringbuffer.GetRawObject());
-                Log.i(LOG_TAG, "ConvertFromJNIArray to string array : " + permissionArray.Length);
-            }
-
-            if (permissionArray != null && resultArray != null)
-            {
-                for (int i = 0; i < permissionArray.Length; i++)
-                {
-                    permissionResults.Add(new RequestResult(permissionArray[i], resultArray[i]));
-                }
-            }
-
-            mCallback(permissionResults);
-        }
-    }
+		return ret;
+	}
 }

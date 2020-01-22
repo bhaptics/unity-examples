@@ -11,7 +11,7 @@
 #pragma warning disable 0219
 #pragma warning disable 0414
 
-using WaveVR_Log;
+using WVR_Log;
 
 public class WaveVR_IMEManagerWrapper {
 	private static string LOG_TAG = "IMEManagerWrapper";
@@ -30,13 +30,14 @@ public class WaveVR_IMEManagerWrapper {
 	//private static int CONTROLLER_BUTTON_TOUCH_PAD = 16;
 	//private static int CONTROLLER_BUTTON_TRIGGER = 32;
 	//private static int CONTROLLER_BUTTON_DIGITALTRIGGER = 64;
-	private static int CONTROLLER_BUTTON_DEFAULT = 112;
-	//private static int CONTROLLER_BUTTON_MAX = 127;
+	//private static int CONTROLLER_BUTTON_ENTER = 128;
+	private static int CONTROLLER_BUTTON_DEFAULT = 240;
+	//private static int CONTROLLER_BUTTON_MAX = 255;
 
 	public enum Locale {
 		en_US = 0,
 		zh_CN = 1,
-    };
+	};
 
 	public enum Action {
 		Done = 0,
@@ -73,20 +74,20 @@ public class WaveVR_IMEManagerWrapper {
 	}
 		
 	public void SetLocale(Locale locale) {
-        Log.d(LOG_TAG, "SetLocale, locale = " + locale);
-        if (locale == Locale.en_US)
-        {
-            mParameter.locale = "en_US";
-        }
-        else if (locale == Locale.zh_CN)
-        {
-            mParameter.locale = "zh_CN";
-        }
-        else
-        {
-            mParameter.locale = "";
-        }
-    }
+		Log.d(LOG_TAG, "SetLocale, locale = " + locale);
+		if (locale == Locale.en_US)
+		{
+			mParameter.locale = "en_US";
+		}
+		else if (locale == Locale.zh_CN)
+		{
+			mParameter.locale = "zh_CN";
+		}
+		else
+		{
+			mParameter.locale = "";
+		}
+	}
 
 	public void SetCallback(InputDoneCallback callback) {
 		mCallback = callback;
@@ -94,7 +95,7 @@ public class WaveVR_IMEManagerWrapper {
 
 	public void Show() {
 		mIMEManager.showKeyboard(mParameter, inputDoneCallback);
-    }
+	}
 
 	public void Hide() {
 		mIMEManager.hideKeyboard();

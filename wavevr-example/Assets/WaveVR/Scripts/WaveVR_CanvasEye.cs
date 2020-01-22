@@ -14,33 +14,33 @@ using wvr;
 [RequireComponent(typeof(Canvas)), System.Obsolete("The Canvas ScreenSpaceCamera is not workable in VR mode. (Unity design)")]
 public class WaveVR_CanvasEye : MonoBehaviour
 {
-    private Canvas canvas;
+	private Canvas canvas;
 
-    // Use this for initialization
-    void Start()
-    {
-        canvas = GetComponent<Canvas>();
-        canvas.worldCamera = null;
-    }
+	// Use this for initialization
+	void Start()
+	{
+		canvas = GetComponent<Canvas>();
+		canvas.worldCamera = null;
+	}
 
-    void OnEnable()
-    {
-        if (WaveVR_Render.Instance)
-            WaveVR_Render.Instance.beforeRenderEye += MyRenderEye;
-    }
+	void OnEnable()
+	{
+		if (WaveVR_Render.Instance)
+			WaveVR_Render.Instance.beforeRenderEye += MyRenderEye;
+	}
 
-    void OnDisable()
-    {
-        if (WaveVR_Render.Instance)
-            WaveVR_Render.Instance.beforeRenderEye -= MyRenderEye;
-    }
+	void OnDisable()
+	{
+		if (WaveVR_Render.Instance)
+			WaveVR_Render.Instance.beforeRenderEye -= MyRenderEye;
+	}
 
-    void MyRenderEye(WaveVR_Render render, WVR_Eye eye, WaveVR_Camera wvrCamera)
-    {
-        if (eye == WVR_Eye.WVR_Eye_Both)
-            return;
-        var camera = wvrCamera.GetCamera();
-        canvas.worldCamera = camera;
-        canvas.renderMode = RenderMode.ScreenSpaceCamera;
-    }
+	void MyRenderEye(WaveVR_Render render, WVR_Eye eye, WaveVR_Camera wvrCamera)
+	{
+		if (eye == WVR_Eye.WVR_Eye_Both)
+			return;
+		var camera = wvrCamera.GetCamera();
+		canvas.worldCamera = camera;
+		canvas.renderMode = RenderMode.ScreenSpaceCamera;
+	}
 }

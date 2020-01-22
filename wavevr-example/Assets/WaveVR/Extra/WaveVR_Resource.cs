@@ -12,142 +12,86 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using wvr;
-using WaveVR_Log;
+using WVR_Log;
 using System;
 
 public class WaveVR_Resource {
-    private static string LOG_TAG = "WVR_Resource";
-    private const string RESOURCE_WRAPPER_CLASSNAME = "com.htc.vr.unity.ResourceWrapper";
-    private AndroidJavaObject ResourceWrapper = null;
+	private static string LOG_TAG = "WaveVR_Resource";
 
-    private static WaveVR_Resource mInstance = null;
+	private static WaveVR_Resource mInstance = null;
 
-    public static WaveVR_Resource instance {
-        get
-        {
-            if (mInstance == null)
-            {
-                mInstance = new WaveVR_Resource();
-            }
+	public static WaveVR_Resource instance {
+		get
+		{
+			if (mInstance == null)
+			{
+				mInstance = new WaveVR_Resource();
+			}
 
-            return mInstance;
-        }
-    }
+			return mInstance;
+		}
+	}
 
-    private void initializeJavaObject()
-    {
-        Log.d(LOG_TAG, "initializeJavaObject");
-        AndroidJavaClass ajc = new AndroidJavaClass(RESOURCE_WRAPPER_CLASSNAME);
+	public string getString(string stringName)
+	{
+		Log.d(LOG_TAG, "getString, string " + stringName);
 
-        if (ajc == null)
-        {
-            Log.e(LOG_TAG, "AndroidJavaClass is null");
-            return;
-        }
-        // Get the PermissionManager object
-        ResourceWrapper = ajc.CallStatic<AndroidJavaObject>("getInstance");
-        if (ResourceWrapper != null)
-        {
-            Log.d(LOG_TAG, "WaveVR_Resource get object success");
-        } else
-        {
-            Log.e(LOG_TAG, "WaveVR_Resource get object failed");
-        }
-    }
+		string retString = "";
 
-    public string getString(string stringName)
-    {
-        Log.d(LOG_TAG, "getString, string " + stringName);
-        if (ResourceWrapper == null)
-        {
-            initializeJavaObject();
-        }
+		if (useSystemLanguageFlag == true)
+		{
+			retString = Interop.WVR_GetStringBySystemLanguage(stringName);
+		} else
+		{
+			retString = Interop.WVR_GetStringByLanguage(stringName, mPreferredLanguage, mCountry);
+		}
+		Log.d(LOG_TAG, "getString, ret string = " + retString);
+		return retString;
+	}
 
-        if (ResourceWrapper == null)
-        {
-            Log.e(LOG_TAG, "getString failed because fail to get WaveVR_Resource object");
-            return "";
-        }
+	public string getStringByLanguage(string stringName, string lang, string country)
+	{
+		Log.d(LOG_TAG, "getPreferredString, string " + stringName + " language is " + lang + " country is " + country);
 
-        string retString = "";
+		string retString = Interop.WVR_GetStringByLanguage(stringName, lang, country);
 
-        if (useSystemLanguageFlag == true)
-        {
-            retString = ResourceWrapper.Call<string>("getStringByName", stringName);
-        } else
-        {
-            retString = ResourceWrapper.Call<string>("getPreferredStringByName", stringName, mPreferredLanguage, mCountry);
-        }
+		Log.d(LOG_TAG, "getStringByLanguage, ret string = " + retString);
+		return retString;
+	}
+	public string getSystemLanguage()
+	{
+		string retString = Interop.WVR_GetSystemLanguage();
 
-        return retString;
-    }
+		Log.d(LOG_TAG, "getSystemLanguage, ret language = " + retString);
+		return retString;
+	}
 
-    public string getStringByLanguage(string stringName, string lang, string country)
-    {
-        Log.d(LOG_TAG, "getPreferredString, string " + stringName + " language is " + lang + " country is " + country);
-        if (ResourceWrapper == null)
-        {
-            initializeJavaObject();
-        }
+	public string getSystemCountry()
+	{
+		string retString = Interop.WVR_GetSystemCountry();
 
-        if (ResourceWrapper == null)
-        {
-            Log.e(LOG_TAG, "getString failed because fail to get WaveVR_Resource object");
-            return "";
-        }
+		Log.d(LOG_TAG, "getSystemCountry, ret country = " + retString);
+		return retString;
+	}
 
-        return ResourceWrapper.Call<string>("getPreferredStringByName", stringName, lang, country);
-    }
-    public string getSystemLanguage()
-    {
-        if (ResourceWrapper == null)
-        {
-            initializeJavaObject();
-        }
+	public bool setPreferredLanguage(string lang, string country)
+	{
+		if (lang == "" && country == "")
+			return false;
 
-        if (ResourceWrapper == null)
-        {
-            Log.e(LOG_TAG, "getSystenLanguage failed because fail to get WaveVR_Resource object");
-            return "";
-        }
+		useSystemLanguageFlag = false;
+		mPreferredLanguage = lang;
+		mCountry = country;
+		return true;
+	}
 
-        return ResourceWrapper.Call<string>("getSystemLanguage");
-    }
-
-    public string getSystemCountry()
-    {
-        if (ResourceWrapper == null)
-        {
-            initializeJavaObject();
-        }
-
-        if (ResourceWrapper == null)
-        {
-            Log.e(LOG_TAG, "getSystenCountry failed because fail to get WaveVR_Resource object");
-            return "";
-        }
-
-        return ResourceWrapper.Call<string>("getSystemCountry");
-    }
-
-    public bool setPreferredLanguage(string lang, string country)
-    {
-        if (lang == "" || country == "")
-            return false;
-
-        useSystemLanguageFlag = false;
-        mPreferredLanguage = lang;
-        mCountry = country;
-        return true;
-    }
-
-    public void useSystemLanguage()
-    {
-        mPreferredLanguage = "system";
-        mCountry = "system";
-        useSystemLanguageFlag = true;
-    }
-    private string mPreferredLanguage = "system";
-    private string mCountry = "system";
-    private bool useSystemLanguageFlag = true;
+	public void useSystemLanguage()
+	{
+		mPreferredLanguage = "system";
+		mCountry = "system";
+		useSystemLanguageFlag = true;
+	}
+	private string mPreferredLanguage = "system";
+	private string mCountry = "system";
+	private bool useSystemLanguageFlag = true;
 }

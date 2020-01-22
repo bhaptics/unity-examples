@@ -1,4 +1,3 @@
 using System;class WaveVR_COMMITINFO{public static string wavevr_version = @"
-origin/SDK3.0.0
-commit 7f47a480339dbfe8473d466d4a95ed0dd8f876fa
+commit 3c8f9a59d06383147f4a56cc33a6eb0a2d79faee
 ";}

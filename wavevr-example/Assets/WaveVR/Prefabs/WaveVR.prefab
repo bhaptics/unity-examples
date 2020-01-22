@@ -162,11 +162,11 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!114 &114084172193078512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -223,7 +223,7 @@ MonoBehaviour:
   distortion: {fileID: 0}
   loadingCanvas: {fileID: 0}
   ear: {fileID: 0}
-  _origin: 1
+  _origin: 0
   needTimeControl: 0
 --- !u!114 &114655389929951366
 MonoBehaviour:

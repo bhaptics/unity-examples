@@ -11,122 +11,122 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WaveVR_Log;
+using WVR_Log;
 using System;
 using wvr;
 
 public class WaveVR_CameraTexture
 {
-    private static string LOG_TAG = "WVR_CameraTexture";
+	private static string LOG_TAG = "WVR_CameraTexture";
 
-    private WVR_CameraInfo_t camerainfo;
-    private bool mStarted = false;
-    private uint nativeTextureId = 0;
-    private float spentTime = Time.time;
-    public bool isStarted
-    {
-        get
-        {
-            return mStarted;
-        }
-    }
+	private WVR_CameraInfo_t camerainfo;
+	private bool mStarted = false;
+	private uint nativeTextureId = 0;
+	private float spentTime = Time.time;
+	public bool isStarted
+	{
+		get
+		{
+			return mStarted;
+		}
+	}
 
-    public delegate void UpdateCameraCompleted(uint nativeTextureId);
-    public static event UpdateCameraCompleted UpdateCameraCompletedDelegate = null;
+	public delegate void UpdateCameraCompleted(uint nativeTextureId);
+	public static event UpdateCameraCompleted UpdateCameraCompletedDelegate = null;
 
-    public delegate void StartCameraCompleted(bool result);
-    public static event StartCameraCompleted StartCameraCompletedDelegate = null;
+	public delegate void StartCameraCompleted(bool result);
+	public static event StartCameraCompleted StartCameraCompletedDelegate = null;
 
-    private static WaveVR_CameraTexture mInstance = null;
+	private static WaveVR_CameraTexture mInstance = null;
 
-    public static WaveVR_CameraTexture instance
-    {
-        get
-        {
-            if (mInstance == null)
-            {
-                mInstance = new WaveVR_CameraTexture();
-            }
+	public static WaveVR_CameraTexture instance
+	{
+		get
+		{
+			if (mInstance == null)
+			{
+				mInstance = new WaveVR_CameraTexture();
+			}
 
-            return mInstance;
-        }
-    }
+			return mInstance;
+		}
+	}
 
-    private void OnStartCameraCompleted(params object[] args)
-    {
-        mStarted = (bool)args[0];
-        if (StartCameraCompletedDelegate != null) StartCameraCompletedDelegate(mStarted);
-        if (!mStarted) return ;
-        camerainfo = (WVR_CameraInfo_t)args[1];
+	private void OnStartCameraCompleted(params object[] args)
+	{
+		mStarted = (bool)args[0];
+		if (StartCameraCompletedDelegate != null) StartCameraCompletedDelegate(mStarted);
+		if (!mStarted) return ;
+		camerainfo = (WVR_CameraInfo_t)args[1];
 
-        Log.d(LOG_TAG, "OnStartCameraCompleted, result = " + mStarted + " type = " + camerainfo.imgType + " width = " + camerainfo.width + " height = " + camerainfo.height);
-    }
+		Log.d(LOG_TAG, "OnStartCameraCompleted, result = " + mStarted + " type = " + camerainfo.imgType + " width = " + camerainfo.width + " height = " + camerainfo.height);
+	}
 
-    private void OnUpdateCameraCompleted(params object[] args)
-    {
-        bool texUpdated = (bool)args[0];
-        Log.d(LOG_TAG, "OnUpdateCameraCompleted, result = " + texUpdated + ", refresh rate = " + (1 / (System.DateTime.Now.Millisecond - spentTime))*1000 + "/sec");
+	private void OnUpdateCameraCompleted(params object[] args)
+	{
+		bool texUpdated = (bool)args[0];
+		Log.d(LOG_TAG, "OnUpdateCameraCompleted, result = " + texUpdated + ", refresh rate = " + (1 / (System.DateTime.Now.Millisecond - spentTime))*1000 + "/sec");
 
-        if (UpdateCameraCompletedDelegate != null)  UpdateCameraCompletedDelegate(nativeTextureId);
-    }
+		if (UpdateCameraCompletedDelegate != null)  UpdateCameraCompletedDelegate(nativeTextureId);
+	}
 
-    public uint getNativeTextureId()
-    {
-        if (!mStarted) return 0;
-        return nativeTextureId;
-    }
+	public uint getNativeTextureId()
+	{
+		if (!mStarted) return 0;
+		return nativeTextureId;
+	}
 
-    public bool startCamera()
-    {
-        if (mStarted) return false;
-        WaveVR_Utils.Event.Listen("StartCameraCompleted", OnStartCameraCompleted);
-        WaveVR_Utils.Event.Listen("UpdateCameraCompleted", OnUpdateCameraCompleted);
+	public bool startCamera()
+	{
+		if (mStarted) return false;
+		WaveVR_Utils.Event.Listen("StartCameraCompleted", OnStartCameraCompleted);
+		WaveVR_Utils.Event.Listen("UpdateCameraCompleted", OnUpdateCameraCompleted);
 
-        WaveVR_Utils.SendRenderEvent(WaveVR_Utils.RENDEREVENTID_StartCamera);
-        return true;
-    }
+		WaveVR_Utils.SendRenderEvent(WaveVR_Utils.RENDEREVENTID_StartCamera);
+		return true;
+	}
 
-    public WVR_CameraImageType GetCameraImageType()
-    {
-        return camerainfo.imgType;
-    }
+	public WVR_CameraImageType GetCameraImageType()
+	{
+		return camerainfo.imgType;
+	}
 
-    public WVR_CameraImageFormat GetCameraImageFormat()
-    {
-        if (!mStarted) return 0;
-        return camerainfo.imgFormat;
-    }
+	public WVR_CameraImageFormat GetCameraImageFormat()
+	{
+		if (!mStarted) return 0;
+		return camerainfo.imgFormat;
+	}
 
-    public uint GetCameraImageWidth()
-    {
-        if (!mStarted) return 0;
-        return camerainfo.width;
-    }
+	public uint GetCameraImageWidth()
+	{
+		if (!mStarted) return 0;
+		return camerainfo.width;
+	}
 
-    public uint GetCameraImageHeight()
-    {
-        if (!mStarted) return 0;
-        return camerainfo.height;
-    }
+	public uint GetCameraImageHeight()
+	{
+		if (!mStarted) return 0;
+		return camerainfo.height;
+	}
 
-    public void stopCamera()
-    {
-        if (!mStarted) return ;
-        WaveVR_Utils.Event.Remove("StartCameraCompleted", OnStartCameraCompleted);
-        WaveVR_Utils.Event.Remove("UpdateCameraCompleted", OnUpdateCameraCompleted);
-        WaveVR_Utils.SendRenderEvent(WaveVR_Utils.RENDEREVENTID_StopCamera);
-        mStarted = false;
-    }
+	public void stopCamera()
+	{
+		if (!mStarted) return ;
+		WaveVR_Utils.Event.Remove("StartCameraCompleted", OnStartCameraCompleted);
+		WaveVR_Utils.Event.Remove("UpdateCameraCompleted", OnUpdateCameraCompleted);
+		WaveVR_Utils.SendRenderEvent(WaveVR_Utils.RENDEREVENTID_StopCamera);
+		mStarted = false;
+	}
 
-    public void updateTexture(uint textureId)
-    {
-        if (!mStarted)
-        {
-            Log.d(LOG_TAG, "camera not started yet");
-            return;
-        }
-        nativeTextureId = textureId;
-        spentTime = System.DateTime.Now.Millisecond;
-        WaveVR_Utils.SendRenderEvent(WaveVR_Utils.RENDEREVENTID_UpdateCamera);
-    }
+	public void updateTexture(uint textureId)
+	{
+		if (!mStarted)
+		{
+			Log.d(LOG_TAG, "camera not started yet");
+			return;
+		}
+		nativeTextureId = textureId;
+		spentTime = System.DateTime.Now.Millisecond;
+		WaveVR_Utils.SendRenderEvent(WaveVR_Utils.RENDEREVENTID_UpdateCamera);
+	}
 }

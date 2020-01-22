@@ -1117,6 +1117,7 @@ MonoBehaviour:
   showIndicator: 0
   showIndicatorAngle: 30
   hideIndicatorByRoll: 1
+  basedOnEmitter: 1
   lineLength: 0.03
   lineStartWidth: 0.0004
   lineEndWidth: 0.0004
@@ -1140,6 +1141,10 @@ MonoBehaviour:
   ShowBeam: 1
   useSystemConfig: 1
   useDefaultMaterial: 1
+  startWidth: 0.000625
+  endWidth: 0.00125
+  startOffset: 0.015
+  endOffset: 0.8
   endOffsetMin: 0.5
   endOffsetMax: 9.5
   customMat: {fileID: 0}
@@ -1177,7 +1182,7 @@ MonoBehaviour:
   Touch_Dot: {fileID: 1768595240631902}
   touch_YAxis_mapping: 1
   Touch_Press: {fileID: 1613220273406734}
-  Trigger_Press: {fileID: 0}
+  Trigger_Press: {fileID: 1952120063675662}
   VolumeUp_Press: {fileID: 1180470384131086}
   VolumeDown_Press: {fileID: 1180470384131086}
   Grip_Press: {fileID: 0}
@@ -1198,4 +1203,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   device: 2
+  useSystemConfig: 1
+  pointerOuterDiameterMin: 0.01
+  pointerOuterDiameter: 0
+  pointerDistanceInMeters: 1.3
+  customTexture: {fileID: 0}
+  useDefaultTexture: 1
+  pointerColor: {r: 1, g: 1, b: 1, a: 1}
+  pointerRenderQueue: 1000
+  showPointer: 1
+  blink: 0
   kpointerGrowthAngle: 90

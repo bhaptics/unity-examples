@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using wvr;
-using WaveVR_Log;
+using WVR_Log;
+using UnityEngine.Profiling;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,424 +11,394 @@ using UnityEditor;
 [CustomEditor(typeof(WaveVR_PoseTrackerManager))]
 public class WaveVR_PoseTrackerManagerEditor : Editor
 {
-    public override void OnInspectorGUI()
-    {
-        WaveVR_PoseTrackerManager myScript = target as WaveVR_PoseTrackerManager;
+	public override void OnInspectorGUI()
+	{
+		WaveVR_PoseTrackerManager myScript = target as WaveVR_PoseTrackerManager;
 
-        myScript.Type = (WaveVR_Controller.EDeviceType)EditorGUILayout.EnumPopup ("Type", myScript.Type);
-        myScript.TrackPosition = EditorGUILayout.Toggle ("Track Position", myScript.TrackPosition);
-        if (true == myScript.TrackPosition)
-        {
-            if (myScript.Type == WaveVR_Controller.EDeviceType.Head)
-            {
-                myScript.EnableNeckModel = (bool)EditorGUILayout.Toggle ("    Enable Neck Model", myScript.EnableNeckModel);
-            } else
-            {
-                myScript.SimulationOption = (WVR_SimulationOption)EditorGUILayout.EnumPopup ("    Simulate Position", myScript.SimulationOption);
-                if (myScript.SimulationOption == WVR_SimulationOption.ForceSimulation || myScript.SimulationOption == WVR_SimulationOption.WhenNoPosition)
-                {
-                    myScript.FollowHead = (bool)EditorGUILayout.Toggle ("        Follow Head", myScript.FollowHead);
-                }
-            }
-        }
+		myScript.Type = (WaveVR_Controller.EDeviceType)EditorGUILayout.EnumPopup ("Type", myScript.Type);
+		myScript.TrackPosition = EditorGUILayout.Toggle ("Track Position", myScript.TrackPosition);
+		if (true == myScript.TrackPosition)
+		{
+			if (myScript.Type == WaveVR_Controller.EDeviceType.Head)
+			{
+				myScript.EnableNeckModel = (bool)EditorGUILayout.Toggle ("	Enable Neck Model", myScript.EnableNeckModel);
+			} else
+			{
+				myScript.SimulationOption = (WVR_SimulationOption)EditorGUILayout.EnumPopup ("	Simulate Position", myScript.SimulationOption);
+				if (myScript.SimulationOption == WVR_SimulationOption.ForceSimulation || myScript.SimulationOption == WVR_SimulationOption.WhenNoPosition)
+				{
+					myScript.FollowHead = (bool)EditorGUILayout.Toggle ("		Follow Head", myScript.FollowHead);
+				}
+			}
+		}
 
-        myScript.TrackRotation = EditorGUILayout.Toggle ("Track Rotation", myScript.TrackRotation);
-        myScript.TrackTiming = (WVR_TrackTiming)EditorGUILayout.EnumPopup ("Track Timing", myScript.TrackTiming);
+		myScript.TrackRotation = EditorGUILayout.Toggle ("Track Rotation", myScript.TrackRotation);
+		myScript.TrackTiming = (WVR_TrackTiming)EditorGUILayout.EnumPopup ("Track Timing", myScript.TrackTiming);
 
-        if (GUI.changed)
-            EditorUtility.SetDirty ((WaveVR_PoseTrackerManager)target);
-    }
+		if (GUI.changed)
+			EditorUtility.SetDirty ((WaveVR_PoseTrackerManager)target);
+	}
 }
 #endif
 
 public enum WVR_TrackTiming {
-    WhenUpdate,  // Pose will delay one frame.
-    WhenNewPoses
+	WhenUpdate,  // Pose will delay one frame.
+	WhenNewPoses
 };
 
 public enum WVR_SimulationOption
 {
-    WhenNoPosition = 0,
-    ForceSimulation = 1,
-    NoSimulation = 2
+	WhenNoPosition = 0,
+	ForceSimulation = 1,
+	NoSimulation = 2
 };
 
 public class WaveVR_PoseTrackerManager : MonoBehaviour
 {
-    private const string LOG_TAG = "WaveVR_PoseTrackerManager";
-    private void PrintDebugLog(string msg)
-    {
-        #if UNITY_EDITOR
-        Debug.Log(LOG_TAG + ": Type: " + this.Type + ", " + msg);
-        #endif
-        Log.d (LOG_TAG, "Type: " + this.Type + ", " + msg);
-    }
+	private const string LOG_TAG = "WaveVR_PoseTrackerManager";
+	private void PrintDebugLog(string msg)
+	{
+		if (Log.EnableDebugLog)
+			Log.d (LOG_TAG, msg, true);
+	}
 
-    public WaveVR_Controller.EDeviceType Type = WaveVR_Controller.EDeviceType.Dominant;
-    public bool TrackPosition = true;
-    public bool EnableNeckModel = true;
-    public WVR_SimulationOption SimulationOption = WVR_SimulationOption.WhenNoPosition;
-    public bool FollowHead = false;
-    public bool TrackRotation = true;
-    public WVR_TrackTiming TrackTiming = WVR_TrackTiming.WhenNewPoses;
+	public WaveVR_Controller.EDeviceType Type = WaveVR_Controller.EDeviceType.Dominant;
+	public bool TrackPosition = true;
+	public bool EnableNeckModel = true;
+	public WVR_SimulationOption SimulationOption = WVR_SimulationOption.WhenNoPosition;
+	public bool FollowHead = false;
+	public bool TrackRotation = true;
+	public WVR_TrackTiming TrackTiming = WVR_TrackTiming.WhenNewPoses;
 
-    private GameObject[] IncludedObjects;
-    private bool[] IncludedStates;
+	private List<GameObject> IncludedObjects = new List<GameObject> ();
+	private List<bool> IncludedStates = new List<bool> ();
 
-    /// <summary>
-    /// We use 4 variables to determine whether to hide object with pose tracker or not.
-    /// There are 2 kinds of pose tracked object:
-    /// 1. Normal object
-    /// 2. Controller
-    /// 1 is shown when connected && has system focus && pose updated.
-    /// 2 is shown when connected && has system focus && pose updated && not Gaze mode.
-    /// </summary>
-    private bool showTrackedObject = true;
-    private bool connected = false;
-    private bool mFocusCapturedBySystem = false;
-    public bool poseUpdated = false;
-    private bool hasNewPose = false;
-    private bool gazeOnly = false;
+	/// <summary>
+	/// We use 4 variables to determine whether to hide object with pose tracker or not.
+	/// There are 2 kinds of pose tracked object:
+	/// 1. Normal object
+	/// 2. Controller
+	/// 1 is shown when connected && has system focus && pose updated.
+	/// 2 is shown when connected && has system focus && pose updated && not Gaze mode.
+	/// And for 2. Controller, if it is NOT focused controller, only model will be shown, beam & pointer will be hidden.
+	/// </summary>
+	private bool showTrackedObject = true;
+	private bool connected = false;
+	private bool mFocusCapturedBySystem = false;
+	public bool poseUpdated = false;
+	private bool hasNewPose = false;
+	private bool gazeOnly = false;
 
-    private WaveVR_DevicePoseTracker devicePoseTracker = null;
-    private WaveVR_ControllerPoseTracker ctrlerPoseTracker = null;
+	private WaveVR_DevicePoseTracker devicePoseTracker = null;
+	private WaveVR_ControllerPoseTracker ctrlerPoseTracker = null;
 
-    private bool ptmEnabled = false;
-    #region Monobehaviour overrides
-    void OnEnable()
-    {
-        if (!ptmEnabled)
-        {
-            int _children_count = transform.childCount;
-            IncludedObjects = new GameObject[_children_count];
-            IncludedStates = new bool[_children_count];
-            for (int i = 0; i < _children_count; i++)
-            {
-                IncludedObjects [i] = transform.GetChild (i).gameObject;
-                IncludedStates [i] = transform.GetChild (i).gameObject.activeSelf;
-                PrintDebugLog ("OnEnable() " + gameObject.name + " has child: " + IncludedObjects [i].name + ", active? " + IncludedStates [i]);
-            }
+	private bool ptmEnabled = false;
 
-            #if UNITY_EDITOR
-            if (Application.isEditor)
-                this.connected = WaveVR_Controller.Input (Type).connected;
-            else
-            #endif
-            {
-                // If pose is invalid, considering as disconnected and not show controller.
-                WaveVR.Device _device = WaveVR.Instance.getDeviceByType (Type);
-                this.connected = _device.connected;
-            }
+	#region Monobehaviour overrides
+	void OnEnable()
+	{
+		if (!ptmEnabled)
+		{
+			IncludedObjects.Clear ();
+			IncludedStates.Clear ();
+			int _children_count = transform.childCount;
+			for (int i = 0; i < _children_count; i++)
+			{
+				IncludedObjects.Add (transform.GetChild (i).gameObject);
+				IncludedStates.Add (transform.GetChild (i).gameObject.activeSelf);
+				PrintDebugLog ("OnEnable() " + this.Type + ", " + gameObject.name + " has child: " + IncludedObjects [i].name + ", active? " + IncludedStates [i]);
+			}
 
-            // Always hide Pose Tracker objects when enabled.
-            // Check whether to show object when:
-            // 1. device connected
-            // 2. pose updated
-            // 3. system focus changed
-            // 4. interaction mode changed
-            ForceActivateTargetObjects (false);
-            this.poseUpdated = false;
-            this.hasNewPose = false;
+			// If pose is invalid, considering as disconnected and not show controller.
+			WaveVR.Device _device = WaveVR.Instance.getDeviceByType (Type);
+			this.connected = _device.connected;
 
-            WaveVR_Utils.Event.Listen (WaveVR_Utils.Event.DEVICE_CONNECTED, onDeviceConnected);
-            WaveVR_Utils.Event.Listen (WaveVR_Utils.Event.DEVICE_ROLE_CHANGED, onDeviceRoleChanged);
-            if (TrackTiming == WVR_TrackTiming.WhenNewPoses)
-                WaveVR_Utils.Event.Listen(WaveVR_Utils.Event.NEW_POSES, OnNewPoses);
+			// Always hide Pose Tracker objects when enabled.
+			// Check whether to show object when:
+			// 1. device connected
+			// 2. pose updated
+			// 3. system focus changed
+			// 4. interaction mode changed
+			ForceActivateTargetObjects (false);
+			this.poseUpdated = false;
+			this.hasNewPose = false;
 
-            WaveVR_Utils.Event.Listen (WaveVR_Utils.Event.INTERACTION_MODE_CHANGED, onInteractionModeChange);
-            WaveVR_Utils.Event.Listen (WaveVR_Utils.Event.SYSTEMFOCUS_CHANGED, onSystemFocusChanged);
+			WaveVR_Utils.Event.Listen (WaveVR_Utils.Event.DEVICE_CONNECTED, onDeviceConnected);
+			WaveVR_Utils.Event.Listen (WaveVR_Utils.Event.NEW_POSES, OnNewPoses);
+			WaveVR_Utils.Event.Listen (WaveVR_Utils.Event.SYSTEMFOCUS_CHANGED, onSystemFocusChanged);
 
-            ptmEnabled = true;
-        }
-    }
+			ptmEnabled = true;
+		}
+	}
 
-    void Awake()
-    {
-        if (TrackPosition == false)
-        {
-            SimulationOption = WVR_SimulationOption.NoSimulation;
-            FollowHead = false;
-        }
+	void Awake()
+	{
+		if (TrackPosition == false)
+		{
+			SimulationOption = WVR_SimulationOption.NoSimulation;
+			FollowHead = false;
+		}
 
-        gameObject.SetActive (false);
-        PrintDebugLog ("Awake() TrackPosition: " + TrackPosition + ", SimulationOption=" + SimulationOption +
-            ", FollowHead: " + FollowHead + ", TrackRotation: " + TrackRotation + ", TrackTiming=" + TrackTiming);
+		gameObject.SetActive (false);
+		PrintDebugLog ("Awake() " + this.Type
+			+ ", TrackPosition: " + TrackPosition
+			+ ", SimulationOption: " + SimulationOption
+			+ ", FollowHead: " + FollowHead
+			+ ", TrackRotation: " + TrackRotation
+			+ ", TrackTiming: " + TrackTiming);
 
-        WaveVR_PointerCameraTracker pcTracker = gameObject.GetComponent<WaveVR_PointerCameraTracker>();
+		WaveVR_PointerCameraTracker pcTracker = gameObject.GetComponent<WaveVR_PointerCameraTracker>();
 
-        if (pcTracker == null)
-        {
-            if (this.Type == WaveVR_Controller.EDeviceType.Head)
-            {
-                PrintDebugLog ("Awake() load WaveVR_DevicePoseTracker.");
-                devicePoseTracker = (WaveVR_DevicePoseTracker)gameObject.AddComponent<WaveVR_DevicePoseTracker> ();
-                if (null != devicePoseTracker)
-                {
-                    devicePoseTracker.type = Type;
-                    devicePoseTracker.trackPosition = TrackPosition;
-                    devicePoseTracker.EnableNeckModel = this.EnableNeckModel;
-                    devicePoseTracker.trackRotation = TrackRotation;
-                    devicePoseTracker.timing = TrackTiming;
-                }
-            } else
-            {
-                PrintDebugLog ("Awake() load WaveVR_ControllerPoseTracker.");
-                ctrlerPoseTracker = (WaveVR_ControllerPoseTracker)gameObject.AddComponent<WaveVR_ControllerPoseTracker> ();
-                if (null != ctrlerPoseTracker)
-                {
-                    ctrlerPoseTracker.Type = Type;
-                    ctrlerPoseTracker.TrackPosition = TrackPosition;
-                    ctrlerPoseTracker.SimulationOption = SimulationOption;
-                    ctrlerPoseTracker.FollowHead = FollowHead;
-                    ctrlerPoseTracker.TrackRotation = TrackRotation;
-                    ctrlerPoseTracker.TrackTiming = TrackTiming;
-                }
-            }
-        }
-        gameObject.SetActive (true);
-    }
+		if (pcTracker == null)
+		{
+			if (this.Type == WaveVR_Controller.EDeviceType.Head)
+			{
+				PrintDebugLog ("Awake() " + this.Type + ", load WaveVR_DevicePoseTracker.");
+				devicePoseTracker = (WaveVR_DevicePoseTracker)gameObject.AddComponent<WaveVR_DevicePoseTracker> ();
+				if (null != devicePoseTracker)
+				{
+					devicePoseTracker.type = Type;
+					devicePoseTracker.trackPosition = TrackPosition;
+					devicePoseTracker.EnableNeckModel = this.EnableNeckModel;
+					devicePoseTracker.trackRotation = TrackRotation;
+					devicePoseTracker.timing = TrackTiming;
+				}
+			} else
+			{
+				PrintDebugLog ("Awake() " + this.Type + ", load WaveVR_ControllerPoseTracker.");
+				ctrlerPoseTracker = (WaveVR_ControllerPoseTracker)gameObject.AddComponent<WaveVR_ControllerPoseTracker> ();
+				if (null != ctrlerPoseTracker)
+				{
+					ctrlerPoseTracker.Type = Type;
+					ctrlerPoseTracker.TrackPosition = TrackPosition;
+					ctrlerPoseTracker.SimulationOption = SimulationOption;
+					ctrlerPoseTracker.FollowHead = FollowHead;
+					ctrlerPoseTracker.TrackRotation = TrackRotation;
+					ctrlerPoseTracker.TrackTiming = TrackTiming;
+				}
+			}
+		}
+		gameObject.SetActive (true);
+	}
 
-    void Update()
-    {
-        if (!Application.isEditor)
-        {
-            if (gameObject != null)
-                Log.gpl.d (LOG_TAG, this.Type + ", Update() showTrackedObject ? " + this.showTrackedObject + ", GameObject " + gameObject.name + " is " + (gameObject.activeSelf ? "shown." : "hidden."));
-            foreach (var _obj in IncludedObjects)
-            {
-                Log.gpl.d (LOG_TAG, this.Type + ", Update() GameObject " + _obj.name + " is " + (_obj.activeSelf ? "active." : "inactive."));
-            }
-        }
+	void Update()
+	{
+		if (!Application.isEditor)
+		{
+			if (Log.gpl.Print)
+			{
+				if (this.Type == WaveVR_Controller.EDeviceType.Head)
+				{
+					PrintDebugLog (showTrackedObject ? "Update() Head, showTrackedObject is true." : "Update() Head, showTrackedObject is false.");
+				}
+				if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+				{
+					PrintDebugLog (showTrackedObject ? "Update() Dominant, showTrackedObject is true." : "Update() Dominant, showTrackedObject is false.");
+				}
+				if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+				{
+					PrintDebugLog (showTrackedObject ? "Update() NonDominant, showTrackedObject is true." : "Update() NonDominant, showTrackedObject is false.");
+				}
 
-        if (!this.connected)
-            return;
+				for (int i = 0; i < IncludedObjects.Count; i++)
+				{
+					if (IncludedObjects[i] != null)
+						PrintDebugLog ("Update() " + this.Type + ", Update() GameObject " + IncludedObjects [i].name + " is " + (IncludedObjects [i].activeSelf ? "active." : "inactive."));
+				}
+			}
+		}
 
-        bool _focus = false;
-        if (WaveVR.Instance != null)
-        {
-            _focus = WaveVR.Instance.FocusCapturedBySystem;
-        }
+		if (!this.connected)
+			return;
 
-        if (this.mFocusCapturedBySystem != _focus)
-        {
-            // InputFocus changed!
-            this.mFocusCapturedBySystem = _focus;
-            PrintDebugLog ("Update() focus is " + (this.mFocusCapturedBySystem ? "captured by system." : "not captured by system."));
-        }
+		ActivateTargetObjects ();
 
-        if (WaveVR_InputModuleManager.Instance != null)
-        {
-            WVR_InteractionMode _imode = WaveVR_InputModuleManager.Instance.GetInteractionMode ();
-            bool _gazeOnly = (_imode == WVR_InteractionMode.WVR_InteractionMode_Gaze) ? true : false;
-            if (this.gazeOnly != _gazeOnly)
-            {
-                this.gazeOnly = _gazeOnly;
-                PrintDebugLog ("Update() interaction mode is " + (this.gazeOnly ? "Gaze only." : "NOT Gaze only."));
-            }
-        }
+		// Update after the frame receiving 1st new pose.
+		this.poseUpdated = this.hasNewPose;
+	}
 
-        ActivateTargetObjects ();
+	void OnDisable()
+	{
+		// Consider a situation: no pose is updated and WaveVR_PoseTrackerManager is enabled <-> disabled multiple times.
+		// At this situation, IncludedStates will be set to false forever since thay are deactivated at 1st time OnEnable()
+		// and the deactivated state will be updated to IncludedStates in 2nd time OnEnable().
+		// To prevent this situation, activate IncludedObjects in OnDisable to restore the state Children GameObjects.
+		PrintDebugLog("OnDisable() " + this.Type + ", restore children objects.");
+		ForceActivateTargetObjects (true);
 
-        // Update after the frame receiving 1st new pose.
-        this.poseUpdated = this.hasNewPose;
-    }
+		WaveVR_Utils.Event.Remove (WaveVR_Utils.Event.DEVICE_CONNECTED, onDeviceConnected);
+		WaveVR_Utils.Event.Remove (WaveVR_Utils.Event.NEW_POSES, OnNewPoses);
+		WaveVR_Utils.Event.Remove (WaveVR_Utils.Event.SYSTEMFOCUS_CHANGED, onSystemFocusChanged);
 
-    void OnDisable()
-    {
-        // Consider a situation: no pose is updated and WaveVR_PoseTrackerManager is enabled <-> disabled multiple times.
-        // At this situation, IncludedStates will be set to false forever since thay are deactivated at 1st time OnEnable()
-        // and the deactivated state will be updated to IncludedStates in 2nd time OnEnable().
-        // To prevent this situation, activate IncludedObjects in OnDisable to restore the state Children GameObjects.
-        PrintDebugLog("OnDisable() restore children objects.");
-        ForceActivateTargetObjects (true);
+		ptmEnabled = false;
+	}
 
-        WaveVR_Utils.Event.Remove (WaveVR_Utils.Event.DEVICE_CONNECTED, onDeviceConnected);
-        WaveVR_Utils.Event.Remove (WaveVR_Utils.Event.DEVICE_ROLE_CHANGED, onDeviceRoleChanged);
-        if (TrackTiming == WVR_TrackTiming.WhenNewPoses)
-            WaveVR_Utils.Event.Remove(WaveVR_Utils.Event.NEW_POSES, OnNewPoses);
-        WaveVR_Utils.Event.Remove (WaveVR_Utils.Event.INTERACTION_MODE_CHANGED, onInteractionModeChange);
-        WaveVR_Utils.Event.Remove (WaveVR_Utils.Event.SYSTEMFOCUS_CHANGED, onSystemFocusChanged);
+	void OnDestroy()
+	{
+		IncludedObjects.Clear ();
+		IncludedStates.Clear ();
+	}
+	#endregion
 
-        ptmEnabled = false;
-    }
-    #endregion
+	private bool hideEventController()
+	{
+		bool _hide = false;
 
-    private bool hideEventController()
-    {
-        bool _hide = false;
-        GameObject _model = WaveVR_EventSystemControllerProvider.Instance.GetControllerModel (this.Type);
-        if (GameObject.ReferenceEquals (gameObject, _model))
-        {
-            _hide = this.gazeOnly;
-        }
+		WVR_InteractionMode _imode = WaveVR.Instance.InteractionMode;
+		if (WaveVR_InputModuleManager.Instance != null)
+			_imode = WaveVR_InputModuleManager.Instance.GetInteractionMode ();
 
-        return _hide;
-    }
+		this.gazeOnly = _imode == WVR_InteractionMode.WVR_InteractionMode_Gaze ? true : false;
 
-    public void ActivateTargetObjects()
-    {
-        bool _hide = hideEventController ();
-        bool _has_input_module_enabled = true;
-        if (WaveVR_InputModuleManager.Instance != null)
-            _has_input_module_enabled = WaveVR_InputModuleManager.Instance.EnableInputModule;
+		GameObject _model = WaveVR_EventSystemControllerProvider.Instance.GetControllerModel (this.Type);
+		if (GameObject.ReferenceEquals (gameObject, _model))
+		{
+			_hide = this.gazeOnly;
+		}
 
-        bool _active = (
-            (this.connected == true)                                    // controller is connected (pose is valid).
-            && (!this.mFocusCapturedBySystem)                           // scene has system focus.
-            && this.poseUpdated                                         // already has pose.
-            && (!_hide)                                                 // not Gaze or not event controller in Gaze
-            && _has_input_module_enabled                                // has InputModuleManager and enabled
-        );
+		return _hide;
+	}
 
-        if (this.showTrackedObject == _active)
-            return;
+	public void ActivateTargetObjects()
+	{
+		bool _hide = hideEventController ();
+		bool _has_input_module_enabled = true;
+		if (WaveVR_InputModuleManager.Instance != null)
+			_has_input_module_enabled = WaveVR_InputModuleManager.Instance.EnableInputModule;
 
-        PrintDebugLog ("ActivateTargetObjects() connected ? " + this.connected
-            + ", mFocusCapturedBySystem? " + this.mFocusCapturedBySystem
-            + ", controller in gaze? " + _hide
-            + ", input module enabled? " + _has_input_module_enabled);
+		bool _active = (
+			(this.connected == true)								// controller is connected (pose is valid).
+			&& (!this.mFocusCapturedBySystem)						// scene has system focus.
+			&& this.poseUpdated										// already has pose.
+			&& (!_hide)												// not event controller or controller in Gaze
+			&& _has_input_module_enabled							// has InputModuleManager and enabled
+		);
 
-        ForceActivateTargetObjects (_active);
-    }
+		if (this.showTrackedObject == _active)
+			return;
 
-    private void ForceActivateTargetObjects(bool active)
-    {
-        if (IncludedObjects == null)
-            return;
+		if (this.Type == WaveVR_Controller.EDeviceType.Head)
+		{
+			PrintDebugLog (connected ? "ActivateTargetObjects() Head, connected is true." : "ActivateTargetObjects() Head, connected is false.");
+			PrintDebugLog (mFocusCapturedBySystem ? "ActivateTargetObjects() Head, mFocusCapturedBySystem is true." : "ActivateTargetObjects() Head, mFocusCapturedBySystem is false.");
+			PrintDebugLog (gazeOnly ? "ActivateTargetObjects() Head, gazeOnly is true." : "ActivateTargetObjects() Head, gazeOnly is false.");
+			PrintDebugLog (_has_input_module_enabled ? "ActivateTargetObjects() Head, _has_input_module_enabled is true." : "ActivateTargetObjects() Head, _has_input_module_enabled is false.");
+		}
+		if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+		{
+			PrintDebugLog (connected ? "ActivateTargetObjects() Dominant, connected is true." : "ActivateTargetObjects() Dominant, connected is false.");
+			PrintDebugLog (mFocusCapturedBySystem ? "ActivateTargetObjects() Dominant, mFocusCapturedBySystem is true." : "ActivateTargetObjects() Dominant, mFocusCapturedBySystem is false.");
+			PrintDebugLog (gazeOnly ? "ActivateTargetObjects() Dominant, gazeOnly is true." : "ActivateTargetObjects() Dominant, gazeOnly is false.");
+			PrintDebugLog (_has_input_module_enabled ? "ActivateTargetObjects() Dominant, _has_input_module_enabled is true." : "ActivateTargetObjects() Dominant, _has_input_module_enabled is false.");
+		}
+		if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+		{
+			PrintDebugLog (connected ? "ActivateTargetObjects() NonDominant, connected is true." : "ActivateTargetObjects() NonDominant, connected is false.");
+			PrintDebugLog (mFocusCapturedBySystem ? "ActivateTargetObjects() NonDominant, mFocusCapturedBySystem is true." : "ActivateTargetObjects() NonDominant, mFocusCapturedBySystem is false.");
+			PrintDebugLog (gazeOnly ? "ActivateTargetObjects() NonDominant, gazeOnly is true." : "ActivateTargetObjects() NonDominant, gazeOnly is false.");
+			PrintDebugLog (_has_input_module_enabled ? "ActivateTargetObjects() NonDominant, _has_input_module_enabled is true." : "ActivateTargetObjects() NonDominant, _has_input_module_enabled is false.");
+		}
 
-        for (int i = 0; i < IncludedObjects.Length; i++)
-        {
-            if (IncludedObjects [i] == null)
-                continue;
+		ForceActivateTargetObjects (_active);
+	}
 
-            if (IncludedStates [i])
-            {
-                PrintDebugLog ("ForceActivateTargetObjects() " + (active ? "activate" : "deactivate") + " " + IncludedObjects [i].name);
-                IncludedObjects [i].SetActive (active);
-                if (WaveVR_EventSystemControllerProvider.Instance.HasControllerLoader (this.Type))
-                {
-                    if (active)
-                        SetEmitter (IncludedObjects [i]);
-                }
-            }
-        }
+	private void ForceActivateTargetObjects(bool active)
+	{
+		for (int i = 0; i < IncludedObjects.Count; i++)
+		{
+			if (IncludedObjects [i] == null)
+				continue;
 
-        this.showTrackedObject = active;
-    }
+			if (IncludedStates [i])
+			{
+				PrintDebugLog ("ForceActivateTargetObjects() " + this.Type + ", " + (active ? "activate" : "deactivate") + " " + IncludedObjects [i].name);
+				IncludedObjects [i].SetActive (active);
+			}
+		}
 
-    private void SetEmitter(GameObject gobj)
-    {
-        WaveVR_Beam _beam = gobj.GetComponent<WaveVR_Beam> ();
-        WaveVR_ControllerPointer _pointer = gobj.GetComponent<WaveVR_ControllerPointer> ();
-        if (_beam == null && _pointer == null)
-            return;
+		this.showTrackedObject = active;
+	}
 
-        WaveVR_Controller.EDeviceType _focus_dev = WaveVR_Controller.EDeviceType.Head;
-        #if UNITY_EDITOR
-        if (Application.isEditor)
-        {
-            _focus_dev = this.Type;
-        } else
-        #endif
-        {
-            WVR_DeviceType _focus_dt = WaveVR_Utils.WVR_GetFocusedController ();
-            if (_focus_dt == WVR_DeviceType.WVR_DeviceType_Controller_Right)
-                _focus_dev = WaveVR_Controller.EDeviceType.Dominant;
-            if (_focus_dt == WVR_DeviceType.WVR_DeviceType_Controller_Left)
-                _focus_dev = WaveVR_Controller.EDeviceType.NonDominant;
-        }
-        if (_focus_dev == WaveVR_Controller.EDeviceType.Head)
-            return;
+	#region Broadcast Handling
+	private void onDeviceConnected(params object[] args)
+	{
+		if (!ptmEnabled)
+		{
+			if (this.Type == WaveVR_Controller.EDeviceType.Head)
+				PrintDebugLog ("onDeviceConnected() Head, do NOTHING when disabled.");
+			if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+				PrintDebugLog ("onDeviceConnected() Dominant, do NOTHING when disabled.");
+			if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+				PrintDebugLog ("onDeviceConnected() NonDominant, do NOTHING when disabled.");
+			return;
+		}
 
-        if (_focus_dev != this.Type)
-        {
-            if (_beam != null)
-            {
-                PrintDebugLog ("SetEmitter() focus type: " + _focus_dev + " hide beam.");
-                _beam.ShowBeam = false;
-            }
-            if (_pointer != null)
-            {
-                PrintDebugLog ("SetEmitter() focus type: " + _focus_dev + " hide pointer.");
-                _pointer.ShowPointer = false;
-            }
-        }
-    }
+		WVR_DeviceType _type = (WVR_DeviceType)args [0];
+		bool _connected = (bool)args [1];
 
-    private void onDeviceConnected(params object[] args)
-    {
-        if (!ptmEnabled)
-        {
-            PrintDebugLog ("onDeviceConnected() do NOTHING when disabled.");
-            return;
-        }
+		if (this.Type == WaveVR_Controller.EDeviceType.Head)
+			PrintDebugLog (_connected ? "onDeviceConnected() Head is connected. " : "onDeviceConnected() Head is disconnected. ");
+		if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+			PrintDebugLog (_connected ? "onDeviceConnected() Dominant is connected. " : "onDeviceConnected() Dominant is disconnected. ");
+		if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+			PrintDebugLog (_connected ? "onDeviceConnected() NonDominant is connected. " : "onDeviceConnected() NonDominant is disconnected. ");
 
-        WVR_DeviceType _type = (WVR_DeviceType)args [0];
-        bool _connected = (bool)args [1];
-        PrintDebugLog ("onDeviceConnected() device " + _type + " is " + (_connected ? "connected." : "disconnected."));
+		if (_type != WaveVR_Controller.Input (this.Type).DeviceType)
+			return;
 
-        if (_type != WaveVR_Controller.Input (this.Type).DeviceType)
-            return;
+		this.connected = _connected;
+		ActivateTargetObjects ();
+	}
 
-        this.connected = _connected;
-        ActivateTargetObjects ();
-    }
+	private void OnNewPoses(params object[] args)
+	{
+		if (!ptmEnabled)
+		{
+			if (this.Type == WaveVR_Controller.EDeviceType.Head)
+				PrintDebugLog ("OnNewPoses() Head, do NOTHING when disabled.");
+			if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+				PrintDebugLog ("OnNewPoses() Dominant, do NOTHING when disabled.");
+			if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+				PrintDebugLog ("OnNewPoses() NonDominant, do NOTHING when disabled.");
+			return;
+		}
 
-    private void onDeviceRoleChanged(params object[] args)
-    {
-        if (WaveVR.Instance != null)
-        {
-            WaveVR.Device _dev = WaveVR.Instance.getDeviceByType (this.Type);
-            if (_dev != null)
-                this.connected = _dev.connected;
-        }
-        PrintDebugLog ("onDeviceRoleChanged() " + this.Type + " is " + (this.connected ? "connected." : "disconnected."));
-    }
+		if (!this.hasNewPose)
+		{
+			// After 1st frame, pose has been updated.
+			if (this.Type == WaveVR_Controller.EDeviceType.Head)
+				PrintDebugLog ("OnNewPoses() Head, pose updated.");
+			if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+				PrintDebugLog ("OnNewPoses() Dominant, pose updated.");
+			if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+				PrintDebugLog ("OnNewPoses() NonDominant, pose updated.");
 
-    private void OnNewPoses(params object[] args)
-    {
-        if (!ptmEnabled)
-        {
-            PrintDebugLog ("OnNewPoses() do NOTHING when disabled.");
-            return;
-        }
+			this.hasNewPose = true;
+		}
+	}
 
-        if (!this.hasNewPose)
-        {
-            // After 1st frame, pose has been updated.
-            PrintDebugLog("OnNewPoses() pose updated.");
-            this.hasNewPose = true;
-        }
-    }
+	private void onSystemFocusChanged(params object[] args)
+	{
+		if (!ptmEnabled)
+		{
+			if (this.Type == WaveVR_Controller.EDeviceType.Head)
+				PrintDebugLog ("onSystemFocusChanged() Head, do NOTHING when disabled.");
+			if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+				PrintDebugLog ("onSystemFocusChanged() Dominant, do NOTHING when disabled.");
+			if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+				PrintDebugLog ("onSystemFocusChanged() NonDominant, do NOTHING when disabled.");
+			return;
+		}
 
-    private void onSystemFocusChanged(params object[] args)
-    {
-        if (!ptmEnabled)
-        {
-            PrintDebugLog ("onSystemFocusChanged() do NOTHING when disabled.");
-            return;
-        }
+		this.mFocusCapturedBySystem = (bool)args [0];
+		if (this.Type == WaveVR_Controller.EDeviceType.Head)
+			PrintDebugLog (mFocusCapturedBySystem ? "onSystemFocusChanged() Head, focus is captured by system." : "onSystemFocusChanged() Head, focus is NOT captured by system.");
+		if (this.Type == WaveVR_Controller.EDeviceType.Dominant)
+			PrintDebugLog (mFocusCapturedBySystem ? "onSystemFocusChanged() Dominant, focus is captured by system." : "onSystemFocusChanged() Dominant, focus is NOT captured by system.");
+		if (this.Type == WaveVR_Controller.EDeviceType.NonDominant)
+			PrintDebugLog (mFocusCapturedBySystem ? "onSystemFocusChanged() NonDominant, focus is captured by system." : "onSystemFocusChanged() NonDominant, focus is NOT captured by system.");
 
-        this.mFocusCapturedBySystem = (bool)args [0];
-        PrintDebugLog ("onSystemFocusChanged() focus is " + (this.mFocusCapturedBySystem ? "captured by system." : "not captured by system."));
-
-        ActivateTargetObjects ();
-    }
-
-    private void onInteractionModeChange(params object[] args)
-    {
-        if (!ptmEnabled)
-        {
-            PrintDebugLog ("onInteractionModeChange() do NOTHING when disabled.");
-            return;
-        }
-
-        WVR_InteractionMode _imode = (WVR_InteractionMode)args [0];
-
-        this.gazeOnly = (_imode == WVR_InteractionMode.WVR_InteractionMode_Gaze) ? true : false;
-        bool _hide = hideEventController ();
-        PrintDebugLog ("onInteractionModeChange() interaction mode is " + _imode + ", controller in gaze? " + _hide);
-
-        ActivateTargetObjects ();
-    }
+		ActivateTargetObjects ();
+	}
+	#endregion
 }

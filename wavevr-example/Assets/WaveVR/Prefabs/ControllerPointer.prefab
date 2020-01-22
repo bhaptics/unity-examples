@@ -95,9 +95,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   device: 2
-  useSystemConfig: 1
-  useDefaultTexture: 1
-  customTexture: {fileID: 0}
-  blink: 0
-  pointerOuterDiameterMin: 0.01
+  UseSystemConfig: 1
+  PointerOuterDiameterMin: 0.01
+  PointerOuterDiameter: 0.24
+  PointerDistanceInMeters: 1.3
+  UseDefaultTexture: 1
+  CustomTexture: {fileID: 0}
+  PointerColor: {r: 1, g: 1, b: 1, a: 1}
+  PointerRenderQueue: 5000
   ShowPointer: 1
+  Blink: 0
+  kpointerGrowthAngle: 90
