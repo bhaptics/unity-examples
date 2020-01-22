@@ -556,7 +556,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4502686166128720}
   - component: {fileID: 114609088768213280}
-  - component: {fileID: 114516786389658024}
+  - component: {fileID: 114653634030385958}
   m_Layer: 0
   m_Name: BhapticsWaveVRGun
   m_TagString: Untagged
@@ -1209,7 +1209,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4235940064796748}
   - component: {fileID: 114054988420924464}
-  - component: {fileID: 114134127359352226}
+  - component: {fileID: 114463385119667198}
   m_Layer: 0
   m_Name: BhapticsWaveVRGun
   m_TagString: Untagged
@@ -5488,20 +5488,6 @@ MonoBehaviour:
     type: 2}
   shootPoint: {fileID: 4586277427175956}
   shootTactSource: {fileID: 114893502988060242}
---- !u!114 &114134127359352226
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1803396239430732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99cb8c4c822e3a44789a92573c480e53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shootPoint: {fileID: 4586277427175956}
-  vrCameraTransform: {fileID: 4607653554376848}
-  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114140468970756936
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5683,6 +5669,21 @@ MonoBehaviour:
   rightPeripheralQuality: 2
   staticFocalPoint: {x: 0, y: 0, z: 10}
   trackedObject: {fileID: 0}
+--- !u!114 &114463385119667198
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1803396239430732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9fb6a90587a266488f735b11cc997eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deviceType: 2
+  shootPoint: {fileID: 4586277427175956}
+  vrCameraTransform: {fileID: 4607653554376848}
+  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114506514033264372
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5725,20 +5726,6 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
---- !u!114 &114516786389658024
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1291388213902940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99cb8c4c822e3a44789a92573c480e53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shootPoint: {fileID: 4763899769116966}
-  vrCameraTransform: {fileID: 4607653554376848}
-  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114606819678294114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5797,6 +5784,21 @@ MonoBehaviour:
     type: 2}
   shootPoint: {fileID: 4763899769116966}
   shootTactSource: {fileID: 114799940495482238}
+--- !u!114 &114653634030385958
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1291388213902940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9fb6a90587a266488f735b11cc997eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deviceType: 3
+  shootPoint: {fileID: 4763899769116966}
+  vrCameraTransform: {fileID: 4607653554376848}
+  laserMaterial: {fileID: 2100000, guid: 81d866645fa31f145ba12769f785d6ef, type: 2}
 --- !u!114 &114714111562341062
 MonoBehaviour:
   m_ObjectHideFlags: 1
